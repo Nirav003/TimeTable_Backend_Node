@@ -1,11 +1,11 @@
 const {compare} = require('bcrypt')
-const { TryCatch } = require('../utils/utility');
+const { TryCatch } = require('../Utils/utility');
 const {APP_TOKEN} = require('../Config/config.js');
 const {
     cookieOptions,
     sendToken
-} =  require("../utils/utility.js");
-const { ErrorHandler } = require("../utils/utility.js");
+} =  require("../Utils/utility.js");
+const { ErrorHandler } = require("../Utils/utility.js");
 const {User} = require("../Models/user.js");
 
 // Create a new user and save it to the database and save token in cookie

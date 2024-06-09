@@ -4,7 +4,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const test = require('./Routes/test.route');
 const { connectDB, corsOptions } = require('./Config/config');
-const { TryCatch } = require('./utils/utility');
+const { TryCatch } = require('./Utils/utility');
 
 const userRoute = require("./Routes/user");
 

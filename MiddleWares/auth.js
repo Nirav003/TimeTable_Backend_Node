@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { ErrorHandler, TryCatch } = require("../utils/utility.js");
+const { ErrorHandler, TryCatch } = require("../Utils/utility.js");
 const {APP_TOKEN} = require('../Config/config.js');
 
 const isAuthenticated = TryCatch((req, res, next) => {
