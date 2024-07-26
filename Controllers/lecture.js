@@ -13,7 +13,7 @@ const createLecture = TryCatch( async ( req, res, next ) => {
     // console.log(newLecture);
     res.status(200).json({
         message: 'Lecture saved successfully',
-        newLecture
+        data: newLecture
     });
 
 })
