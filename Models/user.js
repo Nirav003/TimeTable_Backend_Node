@@ -13,9 +13,9 @@ const schema = new Schema(
       required: true,
     },
     email: {
-        type: String,
-        required: true,
-        unique: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     batch: {
       type: String,
@@ -30,6 +30,11 @@ const schema = new Schema(
       required: true,
       select: false,
     },
+    roll: {
+      type: String,
+      enum: ["student", "staff", "management"],
+      default:"student"
+    }
   },
   {
     timestamps: true,

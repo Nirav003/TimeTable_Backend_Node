@@ -5,8 +5,15 @@ const cookieParser = require('cookie-parser');
 const test = require('./Routes/test.route');
 const { connectDB, corsOptions } = require('./Config/config');
 const { TryCatch } = require('./Utils/utility');
+const bodyParser = require('body-parser');
 
 const userRoute = require("./Routes/user");
+const lectureRoute = require("./Routes/lecture");
+const yearRoute = require("./Routes/year.route");
+
+//import router of slot
+const slotRoute = require('./Routes/slot.route');
+
 
 require('dotenv').config({
     path: './.env',
@@ -18,7 +25,7 @@ const port = process.env.PORT || 3000;
 
 // connectDB(mongoURI);
 
-app.use(exp.json());
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
@@ -29,6 +36,9 @@ app.get('/', (req, res)=>{
 
 app.use('/api/v1/test', test);
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/college", lectureRoute);
+app.use('/api/v1/college', slotRoute); //middleware to use slot router using REST APi
+app.use('/api/v1/college', yearRoute); //middleware to use year router using REST APi
 
 const start = TryCatch(async () => {
         await connectDB(process.env.MONGO_URI)
