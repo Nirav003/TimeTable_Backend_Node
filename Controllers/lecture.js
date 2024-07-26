@@ -10,7 +10,7 @@ const createLecture = TryCatch( async ( req, res, next ) => {
 
     const newLecture = new Lecture({ subject, calendar, classroom, professor, slot, batch, division });
     await newLecture.save();
-    console.log(newLecture);
+    // console.log(newLecture);
     res.status(200).json(newLecture);
 
 })
