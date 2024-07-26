@@ -1,10 +1,13 @@
-const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
+const { Schema, model, models } = mongoose;
 
-const schema = new Schema(
+
+const yearSchema = new Schema(
   {
     year: {
       type: String,
+      required: [true, 'year is required'],
+      unique: [true, 'year should be unique']
     },
   },
   {
@@ -12,8 +15,6 @@ const schema = new Schema(
   }
 );
 
-const Year = mongoose.models.Year || model("Year", schema);
+const Year = models.Year || model("Year", yearSchema);
 
-module.exports = {
-    Year
-}
+module.exports = Year;
