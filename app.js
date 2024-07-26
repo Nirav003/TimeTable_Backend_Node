@@ -5,8 +5,11 @@ const cookieParser = require('cookie-parser');
 const test = require('./Routes/test.route');
 const { connectDB, corsOptions } = require('./Config/config');
 const { TryCatch } = require('./Utils/utility');
+const bodyParser = require('body-parser');
 
 const userRoute = require("./Routes/user");
+const lectureRoute = require("./Routes/lecture");
+
 
 require('dotenv').config({
     path: './.env',
@@ -18,7 +21,7 @@ const port = process.env.PORT || 3000;
 
 // connectDB(mongoURI);
 
-app.use(exp.json());
+app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
 
@@ -29,6 +32,7 @@ app.get('/', (req, res)=>{
 
 app.use('/api/v1/test', test);
 app.use("/api/v1/user", userRoute);
+app.use("/api/v1/college", lectureRoute);
 
 const start = TryCatch(async () => {
         await connectDB(process.env.MONGO_URI)
