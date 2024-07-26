@@ -1,10 +1,13 @@
-const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
+const { Schema, model, models } = mongoose;
 
-const schema = new Schema(
+//Schema design
+const slotSchema = new Schema(
   {
     slot: {
-      type: Integer,
+      type: Number,
+      unique: [true, "This slot is already reserved"],
+      required:[true, "Slot number is required"]
     },
   },
   {
@@ -12,8 +15,7 @@ const schema = new Schema(
   }
 );
 
-const Slot = mongoose.models.Slot || model("Slot", schema);
+//export the slot model
+const Slot = models.Slot || model("Slot", slotSchema);
 
-module.exports = {
-    Slot
-}
+module.exports = Slot;

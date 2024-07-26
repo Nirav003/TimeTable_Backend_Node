@@ -10,6 +10,9 @@ const bodyParser = require('body-parser');
 const userRoute = require("./Routes/user");
 const lectureRoute = require("./Routes/lecture");
 
+//import router of slot
+const slotRoute = require('./Routes/slot.route');
+
 
 require('dotenv').config({
     path: './.env',
@@ -33,6 +36,7 @@ app.get('/', (req, res)=>{
 app.use('/api/v1/test', test);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/college", lectureRoute);
+app.use('/api/v1/college', slotRoute); //middleware to use slot router using REST APi
 
 const start = TryCatch(async () => {
         await connectDB(process.env.MONGO_URI)
