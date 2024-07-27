@@ -10,6 +10,7 @@ const bodyParser = require('body-parser');
 const userRoute = require("./Routes/user");
 const lectureRoute = require("./Routes/lecture");
 const yearRoute = require("./Routes/year.route");
+const subjectRoute = require("./Routes/subject.route");
 
 //import router of slot
 const slotRoute = require('./Routes/slot.route');
@@ -39,6 +40,7 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/college", lectureRoute);
 app.use('/api/v1/college', slotRoute); //middleware to use slot router using REST APi
 app.use('/api/v1/college', yearRoute); //middleware to use year router using REST APi
+app.use('/api/v1/college', subjectRoute); //middleware to use subject router using REST APi
 
 const start = TryCatch(async () => {
         await connectDB(process.env.MONGO_URI)
