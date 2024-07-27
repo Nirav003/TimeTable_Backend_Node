@@ -1,15 +1,14 @@
-const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
+const { Schema, model, models } = mongoose;
 
-const schema = new Schema(
+//Schema design
+const subjectSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
-    },
-    stream: {
-      type: Schema.Types.ObjectId,
-      ref: "Stream",
+      required: [true, "subject name is required"],
+      unique: [true, "subject already exists"],
+      trim: true
     },
   },
   {
@@ -17,8 +16,6 @@ const schema = new Schema(
   }
 );
 
-const Subject = mongoose.models.Subject || model("Subject", schema);
+const Subject = models.Subject || model("Subject", subjectSchema);
 
-module.exports = {
-    Subject
-}
+module.exports = Subject;
