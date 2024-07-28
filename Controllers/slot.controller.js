@@ -1,19 +1,20 @@
 const mongoose = require('mongoose')
 const Slot = require('../Models/slot');
+const { TryCatch } = require('../Utils/utility');
 
 //Get each & every slot
 const getAllSlot = async(req, res) => {
-    try {
-        const slots = await Slot.find();
-        res.status(200).json(slots);
-      } catch (error) { 
-        res.status(500).json({ error: "An error occurred while fetching slots" });
-      }
+  try {
+    const slots = await Slot.find();
+    res.status(200).json(slots);
+  } catch (error) { 
+    res.status(500).json({ error: "An error occurred while fetching slots" });
+  }
 }
 
 //create slot
-const createSlot = async(req, res) => {
-    try{
+const createSlot = TryCatch( async(req, res) => {
+
         const { slot } = req.body;
 
         // Create a new slot document
@@ -21,18 +22,7 @@ const createSlot = async(req, res) => {
         await newSlot.save();
 
         res.status(201).json(newSlot);
-
-    }catch (error) {
-        if (error.code === 11000) {
-            // Duplicate slot error
-            return res.status(400).json({ error: "This slot is already reserved" });
-          }
-        res.status(500).json({ error: "An error occurred while creating the slot" });
-        console.log(error);
-    }
-
-    
-};
+});
 
 //Get specific slot
 const getSlotById = async(req, res) => {
