@@ -7,11 +7,12 @@ const { connectDB, corsOptions } = require('./Config/config');
 const { TryCatch } = require('./Utils/utility');
 const bodyParser = require('body-parser');
 
+const { errorMiddleware } = require('./MiddleWares/error.js');
+
+//import router of slot
 const userRoute = require("./Routes/user");
 const lectureRoute = require("./Routes/lecture");
 const yearRoute = require("./Routes/year.route");
-
-//import router of slot
 const slotRoute = require('./Routes/slot.route');
 
 
@@ -22,7 +23,7 @@ require('dotenv').config({
 
 // const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
-
+const envMode = process.env.NODE_ENV.trim() || "PRODUCTION";
 // connectDB(mongoURI);
 
 app.use(bodyParser.json());
@@ -41,10 +42,14 @@ app.use('/api/v1/college', slotRoute); //middleware to use slot router using RES
 app.use('/api/v1/college', yearRoute); //middleware to use year router using REST APi
 
 const start = TryCatch(async () => {
-        await connectDB(process.env.MONGO_URI)
-        app.listen(port,()=>{
-            console.log(`Server is running on port- http://localhost:${port}/api/v1/test...`);
-        })
+    await connectDB(process.env.MONGO_URI)
+    app.listen(port,()=>{
+        console.log(`Server is running on port- http://localhost:${port}/api/v1/test... in ${envMode} mode`);
+    })
 })
 
+app.use(errorMiddleware);
+
 start();
+
+module.exports = { envMode };
