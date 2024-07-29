@@ -7,7 +7,8 @@ const yearSchema = new Schema(
     year: {
       type: String,
       required: [true, 'year is required'],
-      unique: [true, 'year should be unique']
+      unique: [true, 'year should be unique'],
+      trim: true
     },
   },
   {
