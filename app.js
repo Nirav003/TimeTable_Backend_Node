@@ -13,6 +13,7 @@ const { errorMiddleware } = require('./MiddleWares/error.js');
 const userRoute = require("./Routes/user");
 const lectureRoute = require("./Routes/lecture");
 const yearRoute = require("./Routes/year.route");
+const subjectRoute = require("./Routes/subject.route.js");
 
 //import router of slot
 const slotRoute = require('./Routes/slot.route');
@@ -25,7 +26,7 @@ require('dotenv').config({
 
 // const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 3000;
-const envMode = process.env.NODE_ENV.trim() || "PRODUCTION";
+const envMode = process.env.NODE_ENV ? process.env.NODE_ENV.trim() : "PRODUCTION";
 // connectDB(mongoURI);
 
 app.use(bodyParser.json());

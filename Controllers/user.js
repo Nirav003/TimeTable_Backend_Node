@@ -6,7 +6,7 @@ const {
     sendToken
 } =  require("../Utils/utility.js");
 const { ErrorHandler } = require("../Utils/utility.js");
-const {User} = require("../Models/user.js");
+const {User} = require("../Models/user.module.js");
 
 // Create a new user and save it to the database and save token in cookie
 const newUser = TryCatch(async (req, res, next) => {
