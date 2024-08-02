@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 const { Schema, model, models } = mongoose;
 
-
 const yearSchema = new Schema(
   {
     year: {
