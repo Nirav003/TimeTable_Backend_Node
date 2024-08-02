@@ -1,4 +1,4 @@
-const { Stream } = require("../Models/stream.module.js");
+const Stream = require("../Models/stream.module.js");
 const Year = require("../Models/year.module.js");
 const { TryCatch, ErrorHandler } = require('../Utils/utility.js');
 
