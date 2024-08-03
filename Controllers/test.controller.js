@@ -1,4 +1,4 @@
-const getServerStatus = (re, res) => {
+const getServerStatus = (req, res) => {
     res.send('Node server is up & healthy...')
 }
 
