@@ -1,25 +1,39 @@
 const { Schema, model } = require("mongoose");
 const mongoose = require("mongoose");
 
+
 const schema = new Schema(
   {
-    day: {
-      type: String,
+    
+    jsDate: {
+      type: Date,
       required: true,
+      trim: true
     },
     date: {
-      type: Integer,
+      type: String,
       required: true,
+      trim: true
+    },
+    dayOfWeek: {
+      type: String,
+      required: true,
+      trim: true
     },
     month: {
       type: String,
       required: true,
-      unique: true,
+      trim: true
     },
-    year: {
-      type: Integer,
-      required: true,    
-    },
+    shifts:[{
+      type: String,
+      default:[]
+    }],
+    holiday:{
+      type: String,
+      trim: true,
+      default: ''
+    }
   },
   {
     timestamps: true,
