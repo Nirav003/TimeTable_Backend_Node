@@ -6,10 +6,12 @@ const {
     deleteSlot, updateSlot
 } = require('../Controllers/slot.controller');
 
-router.route('/all-slot').get(isAuthenticated ,getAllSlot);
-router.route('/create-slot').post(isAuthenticated ,createSlot);
-router.route('/slot/:id').get(isAuthenticated, getSlotById)
-.delete(isAuthenticated, deleteSlot)
-.put(isAuthenticated, updateSlot)
+router.use(isAuthenticated);
+
+router.route('/all-slot').get(getAllSlot);
+router.route('/create-slot').post(createSlot);
+router.route('/slot/:id').get(getSlotById)
+.delete(deleteSlot)
+.put(updateSlot)
 
 module.exports = router;

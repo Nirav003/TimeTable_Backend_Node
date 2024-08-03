@@ -9,8 +9,8 @@ const getAllSubject = TryCatch(async (req, res) => {
 });
 
 //Get subject by id
-const getSubjectById = async (req, res) => {
-  try {
+const getSubjectById = TryCatch(async (req, res) => {
+
     const subjectId = req.params.id;
 
     if (!mongoose.Types.ObjectId.isValid(subjectId)) {
@@ -23,13 +23,10 @@ const getSubjectById = async (req, res) => {
     }
 
     res.status(200).json(subject);
-  } catch (error) {
-    console.error("Error details:", error);
     res
       .status(500)
       .json({ error: "An error occurred while fetching the subject" });
-  }
-};
+});
 
 //Add Subject
 const createSubject = TryCatch(async (req, res) => {

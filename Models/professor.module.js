@@ -6,10 +6,12 @@ const schema = new Schema(
     name:{
         type: String,
         required: true,
+        unique: true,
     },
-    subjects: {
+    stream: {
       type: Schema.Types.ObjectId,
-      ref: 'Subject',
+      ref: 'Stream',
+      required: true,
     },
     designation: {
         type: String,
@@ -20,8 +22,7 @@ const schema = new Schema(
         required: true,
     },
     phoneNumber: {
-        type: Integer,
-        required: true,
+        type: Number,
     }
   },
   {

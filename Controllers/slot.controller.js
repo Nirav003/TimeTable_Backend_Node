@@ -1,11 +1,20 @@
 const mongoose = require("mongoose");
 const Slot = require("../Models/slot.module");
-const { TryCatch } = require("../Utils/utility");
+const { TryCatch, ErrorHandler } = require("../Utils/utility");
 
 //Get each & every slot
 const getAllSlot = TryCatch(async (req, res) => {
+
   const slots = await Slot.find();
-  res.status(200).json(slots);
+
+  if(!slots) return next(new ErrorHandler("No slots found", 404));
+
+  res.status(200).json({
+   success: true,
+    message: "Slots found successfully",
+    slot: slots
+  });
+
 });
 
 //create slot
@@ -16,72 +25,62 @@ const createSlot = TryCatch(async (req, res) => {
   const newSlot = new Slot({ slot });
   await newSlot.save();
 
-  res.status(201).json(newSlot);
+  res.status(201).json({
+    success: true,
+    message: "Slot created successfully",
+    slot: newSlot
+  });
 });
 
 //Get specific slot
-const getSlotById = async (req, res) => {
-  try {
+const getSlotById = TryCatch(async (req, res) => {
+
     const slotId = req.params.id;
-    if (!slotId) {
-      return res.status(400).json({ error: "Slot ID is required" });
-    }
+
+    if (!slotId)  return  next(new ErrorHandler("Slot ID is required", 400));
 
     const slot = await Slot.findById(slotId);
-    if (!slot) {
-      return res.status(404).json({ error: "Slot not found" });
-    }
+    if (!slot)  return  next(new ErrorHandler("Slot not found", 404));
 
-    res.status(200).json(slot);
-  } catch (error) {
-    console.error("Error details:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while fetching the slot" });
-  }
-};
+    res.status(200).json({
+      success: true,
+      message: "Slot found successfully",
+      slot: slot
+    });
+  
+});
 
 //Delete slot
-const deleteSlot = async (req, res) => {
-  try {
+const deleteSlot = TryCatch(async (req, res) => {
+
     const slotId = req.params.id;
 
     // Validate the ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(slotId)) {
-      return res.status(400).json({ error: "Invalid slot ID format" });
-    }
+    if (!mongoose.Types.ObjectId.isValid(slotId)) return  next(new ErrorHandler("Invalid slot ID format", 400));
 
     //Find slot & delete
     const result = await Slot.findByIdAndDelete(slotId);
-    if (!result) {
-      return res.status(404).json({ error: "Slot not found" });
-    }
+    if (!result)  return next(new ErrorHandler("Slot not found", 404));
 
-    res.status(200).json({ message: "Slot deleted successfully" });
-  } catch (error) {
-    console.error("Error details:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while deleting the slot" });
-    //console.log(error);
-  }
-};
+    res.status(200).json({ 
+      success: true,
+      message: "Slot deleted successfully" 
+    });
+  
+});
 
 //Modify slot
-const updateSlot = async (req, res) => {
-  try {
+const updateSlot = TryCatch(async (req, res) => {
+
     const slotId = req.params.id;
     const { slot } = req.body;
 
     // Validate the ObjectId format
-    if (!mongoose.Types.ObjectId.isValid(slotId)) {
-      return res.status(400).json({ error: "Invalid slot ID format" });
-    }
+    if (!mongoose.Types.ObjectId.isValid(slotId)) return  next(new ErrorHandler("Invalid slot ID format", 400));
+
 
     // Validate the slot value
-    if (typeof slot !== "number" || isNaN(slot)) {
-      return res.status(400).json({ error: "Slot must be a valid number" });
-    }
+    if (typeof slot !== "number" || isNaN(slot))  return  next(new ErrorHandler("Slot must be a valid number", 400));
 
     const updatedSlot = await Slot.findByIdAndUpdate(
       slotId,
@@ -89,19 +88,15 @@ const updateSlot = async (req, res) => {
       { new: true, runValidators: true } //new: make sure value remains updated, rV:updated value is being cross verified with model
     );
 
-    if (!updatedSlot) {
-      return res.status(404).json({ error: "Slot not found" }); //if any issue during above operation, 404 err
-    }
+    if (!updatedSlot) return  next(new ErrorHandler("Slot not found", 404)); //if any issue during above operation, 404 err
 
-    res.status(200).json(updatedSlot); // or else updated successuffy
-  } catch (error) {
-    console.error("Error details:", error);
-    res
-      .status(500)
-      .json({ error: "An error occurred while updating the slot" });
-    //console.log(error)
-  }
-};
+    res.status(200).json({
+      success: true,
+      message: "Slot updated successfully",
+      slot: updatedSlot
+    }); // or else updated successuffy
+  
+});
 
 //export the module
 module.exports = {
