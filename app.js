@@ -12,7 +12,10 @@ const { errorMiddleware } = require('./MiddleWares/error.js');
 //import router of slot
 const userRoute = require("./Routes/user");
 const lectureRoute = require("./Routes/lecture");
+const classroomRoute = require("./Routes/classroom.js");
 const yearRoute = require("./Routes/year.route");
+const streamRoute = require("./Routes/stream.route.js");
+const professorRoute = require("./Routes/professor.route");
 const subjectRoute = require("./Routes/subject.route.js");
 const calendarRoute = require("./Routes/calendar.route.js");
 
@@ -26,7 +29,7 @@ require('dotenv').config({
 
 
 // const mongoURI = process.env.MONGO_URI;
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8000;
 const envMode = process.env.NODE_ENV ? process.env.NODE_ENV.trim() : "PRODUCTION";
 // connectDB(mongoURI);
 
@@ -44,8 +47,11 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/college", lectureRoute);
 app.use('/api/v1/college', slotRoute); //middleware to use slot router using REST APi
 app.use('/api/v1/college', yearRoute); //middleware to use year router using REST APi
+app.use('/api/v1/college', streamRoute); //middleware to use stream router using REST APi
+app.use('/api/v1/college', professorRoute); //middleware to use professor router using REST APi
 app.use('/api/v1/college', subjectRoute); //middleware to use subject router using REST APi
-app.use('/api/v1/college', calendarRoute);//middleware to use calendar router using REST APi
+app.use('/api/v1/college', classroomRoute); //middleware to use classroom router using REST APi
+app.use('/api/v1/college', calendarRoute);  //middleware to use calendar router using REST APi
 
 const start = TryCatch(async () => {
     await connectDB(process.env.MONGO_URI)

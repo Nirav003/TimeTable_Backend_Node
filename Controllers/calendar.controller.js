@@ -10,7 +10,7 @@ const createYearCalendar = TryCatch(async (req, res) => {
     return res.status(400).json({ error: "Please provide a date" });
   }
 
-  const startDate = moment(date, "DD/MM/YYYY");
+  const startDate = moment.utc(date, "DD/MM/YYYY").startOf('day');
 
   if (!startDate.isValid()) {
     return res
@@ -52,6 +52,9 @@ const createDayOfCalendar = async (req, res) => {
       return res.status(400).json({ error: 'Invalid date format. Please use DD/MM/YYYY.' });
     }
 
+    // Set the time to noon to avoid timezone issues
+    parsedDate.set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
+
     const dayOfWeek = parsedDate.format('dddd');
     const formattedDate = parsedDate.toDate();
 
@@ -86,16 +89,8 @@ const deleteCalendarEntryByDate = TryCatch(async (req, res) => {
     return res.status(400).json({ error: "Please provide a date" });
   }
 
-  const dateToDelete = moment(date, "DD/MM/YYYY");
-
-  if (!dateToDelete.isValid()) {
-    return res
-      .status(400)
-      .json({ error: "Invalid date format. Please use DD/MM/YYYY." });
-  }
-
   const result = await Calendar.deleteOne({
-    jsDate: dateToDelete.toDate(),
+    date: date,
   });
 
   if (result.deletedCount === 0) {
@@ -104,7 +99,7 @@ const deleteCalendarEntryByDate = TryCatch(async (req, res) => {
       .json({ message: "No entry found for the given date" });
   }
 
-  res.status(200).json({ message: "Entry deleted successfully" });
+  res.status(200).json({ message: "Entry deleted successfully"});
 });
 
 //Delete calender objects within the range (startDate, endDate)
@@ -118,7 +113,7 @@ const deleteCalendarEntriesInRange = TryCatch(async (req, res) => {
   }
 
   const start = moment(startDate, "DD/MM/YYYY");
-  const end = moment(endDate, "DD/MM/YYYY");
+  let end = moment(endDate, "DD/MM/YYYY");
 
   if (!start.isValid() || !end.isValid()) {
     return res
@@ -129,6 +124,9 @@ const deleteCalendarEntriesInRange = TryCatch(async (req, res) => {
   if (start.isAfter(end)) {
     return res.status(400).json({ error: "startDate must be before endDate" });
   }
+
+  // Set end date to end of the day to include all entries on that day
+  end = end.endOf('day');
 
   const result = await Calendar.deleteMany({
     jsDate: { $gte: start.toDate(), $lte: end.toDate() },
@@ -143,7 +141,8 @@ const deleteCalendarEntriesInRange = TryCatch(async (req, res) => {
   res
     .status(200)
     .json({ message: `${result.deletedCount} entries deleted successfully` });
-});
+}
+);
 
 module.exports = {
   createYearCalendar,

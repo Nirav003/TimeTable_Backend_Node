@@ -1,4 +1,4 @@
-const {Lecture} = require('../Models/lecture.module.js');
+const { Lecture } = require('../Models/lecture.module.js');
 const { ErrorHandler, TryCatch } = require('../Utils/utility.js');
 
 // Create a new lecture
