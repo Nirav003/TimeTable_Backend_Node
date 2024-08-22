@@ -38,14 +38,13 @@ const createYearCalendar = TryCatch(async (req, res) => {
   res.status(201).json({ message: "Calendar entries created successfully" });
 });
 
-const createDayOfCalendar = async (req, res) => {
+const createDayOfCalendar = TryCatch( async (req, res) => {
   const { date, shifts = [], holiday = '' } = req.body;
 
   if (!date) {
     return res.status(400).json({ error: 'Please provide a date' });
   }
 
-  try {
     const parsedDate = moment(date, 'DD/MM/YYYY');
 
     if (!parsedDate.isValid()) {
@@ -69,11 +68,9 @@ const createDayOfCalendar = async (req, res) => {
 
     const savedEntry = await newCalendarEntry.save();
     res.status(201).json(savedEntry);
-  } catch (error) {
-    console.error('Error details:', error);
-    res.status(500).json({ error: 'An error occurred while creating the calendar entry' });
-  }
-};
+  
+}
+);
 
 //Delete whole year calendar objects
 const deleteAllCalendarEntries = TryCatch(async (req, res) => {
