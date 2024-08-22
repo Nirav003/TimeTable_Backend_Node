@@ -26,7 +26,8 @@ const schema = new Schema(
       trim: true
     },
     shifts:[{
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: 'Shift',
       default:[]
     }],
     holiday:{

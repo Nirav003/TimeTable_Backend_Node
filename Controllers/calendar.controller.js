@@ -1,4 +1,6 @@
+const mongoose = require("mongoose");
 const { Calendar } = require("../Models/calendar.module");
+const Shift = require("../Models/shift.module");
 const { TryCatch } = require("../Utils/utility");
 const moment = require("moment");
 
@@ -38,6 +40,7 @@ const createYearCalendar = TryCatch(async (req, res) => {
   res.status(201).json({ message: "Calendar entries created successfully" });
 });
 
+//create a day in calendar
 const createDayOfCalendar = TryCatch( async (req, res) => {
   const { date, shifts = [], holiday = '' } = req.body;
 
@@ -141,10 +144,62 @@ const deleteCalendarEntriesInRange = TryCatch(async (req, res) => {
 }
 );
 
+// Update a calendar entry
+const updateCalendarDay = TryCatch(async (req, res, next) => {
+  const { id } = req.params;
+  const { jsDate, date, dayOfWeek, month, shifts, holiday } = req.body;
+
+  // Validate the ObjectId format
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return next(new ErrorHandler("Invalid calendar ID format", 400));
+  }
+
+  // Validate that the shifts are valid ObjectId references
+  if (shifts && !Array.isArray(shifts)) {
+    return next(new ErrorHandler("Shifts must be an array of ObjectId references", 400));
+  }
+
+  if (shifts) {
+    for (let shiftId of shifts) {
+      if (!mongoose.Types.ObjectId.isValid(shiftId)) {
+        return next(new ErrorHandler(`Invalid shift ID format: ${shiftId}`, 400));
+      }
+
+      const shiftExists = await Shift.findById(shiftId);
+      if (!shiftExists) {
+        return next(new ErrorHandler(`Shift not found: ${shiftId}`, 404));
+      }
+    }
+  }
+  const updatedCalendar = await Calendar.findByIdAndUpdate(
+    id,
+    {
+      jsDate,
+      date,
+      dayOfWeek,
+      month,
+      shifts, // Array of ObjectId references
+      holiday
+    },
+    { new: true, runValidators: true }
+  ).populate('shifts');
+
+  if (!updatedCalendar) {
+    return next(new ErrorHandler("Calendar not found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Calendar updated successfully",
+    calendar: updatedCalendar
+  });
+});
+
 module.exports = {
   createYearCalendar,
   createDayOfCalendar,
   deleteAllCalendarEntries,
   deleteCalendarEntryByDate,
   deleteCalendarEntriesInRange,
+  updateCalendarDay
 };
