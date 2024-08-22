@@ -18,9 +18,9 @@ const streamRoute = require("./Routes/stream.route.js");
 const professorRoute = require("./Routes/professor.route");
 const subjectRoute = require("./Routes/subject.route.js");
 const calendarRoute = require("./Routes/calendar.route.js");
-
+const shiftRoute = require("./Routes/shift.route.js");
 //import router of slot
-const slotRoute = require('./Routes/slot.route');
+const timeSlotRoute = require('./Routes/timeSlot.route');
 
 
 require('dotenv').config({
@@ -45,13 +45,14 @@ app.get('/', (req, res)=>{
 app.use('/api/v1/test', test);
 app.use("/api/v1/user", userRoute);
 app.use("/api/v1/college", lectureRoute);
-app.use('/api/v1/college', slotRoute); //middleware to use slot router using REST APi
+app.use('/api/v1/college', timeSlotRoute); //middleware to use slot router using REST APi
 app.use('/api/v1/college', yearRoute); //middleware to use year router using REST APi
 app.use('/api/v1/college', streamRoute); //middleware to use stream router using REST APi
 app.use('/api/v1/college', professorRoute); //middleware to use professor router using REST APi
 app.use('/api/v1/college', subjectRoute); //middleware to use subject router using REST APi
 app.use('/api/v1/college', classroomRoute); //middleware to use classroom router using REST APi
 app.use('/api/v1/college', calendarRoute);  //middleware to use calendar router using REST APi
+app.use('/api/v1/college', shiftRoute);    //middleware to use shift router using REST APi
 
 const start = TryCatch(async () => {
     await connectDB(process.env.MONGO_URI)
