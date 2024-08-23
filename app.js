@@ -17,6 +17,7 @@ const yearRoute = require("./Routes/year.route");
 const streamRoute = require("./Routes/stream.route.js");
 const professorRoute = require("./Routes/professor.route");
 const subjectRoute = require("./Routes/subject.route.js");
+const divisionRoute = require("./Routes/division.route");
 
 //import router of slot
 const slotRoute = require('./Routes/slot.route');
@@ -50,6 +51,7 @@ app.use('/api/v1/college', streamRoute); //middleware to use stream router using
 app.use('/api/v1/college', professorRoute); //middleware to use professor router using REST APi
 app.use('/api/v1/college', subjectRoute); //middleware to use subject router using REST APi
 app.use('/api/v1/college', classroomRoute); //middleware to use classroom router using REST APi
+app.use('/api/v1/college', divisionRoute); //middleware to use division router using REST APi
 
 const start = TryCatch(async () => {
     await connectDB(process.env.MONGO_URI)
