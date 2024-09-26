@@ -9,7 +9,11 @@ const createLecture = TryCatch(async (req, res, next) => {
 
     if(!subject || !classroom || !professor) return next(new ErrorHandler('Please provide all the necessary details',400));
 
-    const lecture = new Lecture(req.body);
+    const lecture = new Lecture(req.body)
+    .populate('subject')
+    .populate('classroom')
+    .populate('professor')
+    .populate('division');
     console.log('lecture>>>>',lecture);
     
     await lecture.save();
