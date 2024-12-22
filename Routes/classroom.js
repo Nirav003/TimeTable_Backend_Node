@@ -15,6 +15,6 @@ router.route('/all-classroom').get(getAllClassroom);
 router.route('/create-classroom').post(createClassroom);
 router.route('/classroom/:id').get(getClassroomById)
 .delete(deleteClassroom)
-.put(updateClassroom)
+.patch(updateClassroom)
 
 module.exports = router;

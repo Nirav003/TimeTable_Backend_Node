@@ -14,7 +14,7 @@ router.use(isAuthenticated);
 router.route('/professor').get(getAllProfessor);
 router.route('/create-professor').post(createProfessor);
 router.route('/professor/:id').get(getProfessorById)
-    .put(updateProfessor)
+    .patch(updateProfessor)
     .delete(deleteProfessor);
 
 module.exports = router;

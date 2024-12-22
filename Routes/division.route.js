@@ -14,7 +14,7 @@ router.use(isAuthenticated);
 router.route('/division').get(getAllDivisions);
 router.route('/create-division').post(createDivision);
 router.route('/division/:id').get(getDivisionById)
-    .put(updateDivision)
+    .patch(updateDivision)
     .delete(deleteDivision);
 
 module.exports = router;

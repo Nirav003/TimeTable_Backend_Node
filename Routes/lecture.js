@@ -15,6 +15,6 @@ router.route('/all-lecture').get(getAllLectures);
 router.route('/create-lecture').post(createLecture);
 router.route('/lecture/:id').get(getLectureById)
 .delete(deleteLecture)
-.put(updateLecture);
+.patch(updateLecture);
 
 module.exports = router;

@@ -6,7 +6,18 @@ const { TryCatch } = require("../Utils/utility");
 //get all shifts
 const getAllShifts = TryCatch(async (req, res) => {
   // Fetch all shift documents from the database
-  const shifts = await Shift.find().populate("timeSlot");
+  const shifts = await Shift.find().populate({ 
+    path: "timeSlot",
+    populate: {
+      path: "lecture",
+      populate: [
+        {path: "subject"},
+        {path: "professor"},
+        {path: "classroom"},
+        {path: "division"}
+      ] 
+    }
+  });
 
   // If no shifts are found, send a 404 response
   if (shifts.length === 0) {
