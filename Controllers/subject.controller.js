@@ -5,7 +5,11 @@ const { TryCatch } = require("../Utils/utility");
 //Get all subjects
 const getAllSubject = TryCatch(async (req, res) => {
   const subjects = await Subject.find();
-  res.status(200).json(subjects);
+  res.status(200).json({
+    success: true,
+    message: "Subjects fetched successfully",
+    subjects,
+  });
 });
 
 //Get subject by id
@@ -31,34 +35,37 @@ const getSubjectById = TryCatch(async (req, res) => {
 //Add Subject
 const createSubject = TryCatch(async (req, res) => {
   const { name } = req.body;
-  const newSubject = new Subject({ name });
-  await newSubject.save();
-  res.status(201).json(newSubject);
+  const newSubject = await Subject.create({ name });
+  res.status(201).json({
+    success: true,
+    message: "Subject created successfully",
+    subject: newSubject,
+  });
 });
 
 //Modify subject
 const updateSubject = TryCatch( async (req, res) => {
   
-    const subjectId = req.params.id;
-    const { name } = req.body;
+  const subjectId = req.params.id;
+  const { name } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(subjectId)) {
-      return res.status(400).json({ error: "Invalid subject ID format" });
-    }
+  if (!mongoose.Types.ObjectId.isValid(subjectId)) {
+    return res.status(400).json({ error: "Invalid subject ID format" });
+  }
 
-    const updatedSubject = await Subject.findByIdAndUpdate(
-      subjectId,
-      { name },
-      { new: true, runValidators: true }
-    );
+  const updatedSubject = await Subject.findByIdAndUpdate(
+    subjectId,
+    { name },
+    { new: true, runValidators: true }
+  );
 
-    if (!updatedSubject) {
-      return res.status(404).json({ error: "Subject not found" });
-    }
+  if (!updatedSubject) {
+    return res.status(404).json({ error: "Subject not found" });
+  }
 
-    res.status(200).json(updatedSubject);
-}
-);
+  res.status(200).json(updatedSubject);
+
+});
 
 //Delete Subjects
 const deleteSubject = TryCatch( async (req, res) => {

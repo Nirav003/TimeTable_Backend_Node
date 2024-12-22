@@ -87,9 +87,9 @@ const updateProfessor = TryCatch(async (req, res, next) => {
 
     if(!professorId) return next(new ErrorHandler('Professor Id not found', 404));
 
-    const streams = await Stream.findById(streamId);
+    // const streams = await Stream.findById(streamId);
 
-    if(!streams) return next(new ErrorHandler('Stream not found', 400));
+    // if(!streams) return next(new ErrorHandler('Stream not found', 400));
 
     const updatedProfessor = await Professor.findByIdAndUpdate(professorId, { name, designation, emailId, phoneNumber, stream: streamId }, {new: true, runValidators: true}).populate({
         path:'stream',

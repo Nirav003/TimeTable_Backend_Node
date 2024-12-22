@@ -5,7 +5,11 @@ const { TryCatch } = require("../Utils/utility");
 //Get all the years
 const getAllYear = TryCatch(async (req, res) => {
   const years = await Year.find();
-  res.status(200).json(years);
+  res.status(200).json({
+    success: true,
+    message: "Subjects fetched successfully",
+    years: years,
+  });
 });
 
 //Get year by Id
