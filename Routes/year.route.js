@@ -9,7 +9,7 @@ const {
 router.route('/year').get(isAuthenticated ,getAllYear);
 router.route('/create-year').post(isAuthenticated, createYear);
 router.route('/year/:id').get(isAuthenticated, getYearById)
-.put(isAuthenticated, updateYear)
+.patch(isAuthenticated, updateYear)
 .delete(isAuthenticated, deleteYear);
 
 

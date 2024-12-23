@@ -12,6 +12,6 @@ router.route('/timeslot').get(getAllSlot)
 .post(createSlot);
 router.route('/timeslot/:id').get(getSlotById)
 .delete(deleteSlot)
-.put(updateSlot)
+.patch(updateSlot)
 
 module.exports = router;

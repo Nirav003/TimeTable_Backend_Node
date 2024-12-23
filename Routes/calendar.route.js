@@ -12,7 +12,7 @@ router.route('/calendar/day').post(isAuthenticated, createDayOfCalendar)
 router.route('/calendar').delete(isAuthenticated, deleteAllCalendarEntries)
 router.route('/calender-range-delete').delete(isAuthenticated, deleteCalendarEntriesInRange)
 router.route('/delete-date').delete(isAuthenticated, deleteCalendarEntryByDate)
-router.route('/calendar/:id').put(isAuthenticated, updateCalendarDay);
+router.route('/calendar/:id').patch(isAuthenticated, updateCalendarDay);
 
 
 module.exports = router;

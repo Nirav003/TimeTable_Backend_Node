@@ -15,6 +15,6 @@ router.route('/stream').get(getAllStreams);
 router.route('/create-stream').post(createStream);
 router.route('/stream/:id').get(getStreamById)
 .delete(deleteStream)
-.put(updateStream)
+.patch(updateStream)
 
 module.exports = router;

@@ -9,7 +9,7 @@ const {
 router.route('/subjects').get(isAuthenticated, getAllSubject);
 router.route('/subject').post(isAuthenticated, createSubject);
 router.route('/subject/:id').get(isAuthenticated, getSubjectById)
-.put(isAuthenticated, updateSubject)
+.patch(isAuthenticated, updateSubject)
 .delete(isAuthenticated, deleteSubject);
 
 module.exports = router;

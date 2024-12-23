@@ -9,7 +9,7 @@ const {
 router.route('/shift').get(isAuthenticated, getAllShifts)
 .post(isAuthenticated, createShift);
 router.route('/shift/:id').get(isAuthenticated, getShiftById)
-.put(isAuthenticated, updateShift)
+.patch(isAuthenticated, updateShift)
 .delete(isAuthenticated, deleteShift);
 
 module.exports = router;
