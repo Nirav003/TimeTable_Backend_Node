@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const TimeSlot = require("../Models/timeSlot.module");
-const {Lecture} = require("../Models/lecture.module")
+const { Lecture } = require("../Models/lecture.module")
 const { TryCatch, ErrorHandler } = require("../Utils/utility");
 
 //Get each & every slot
@@ -13,7 +13,7 @@ const getAllSlot = TryCatch(async (req, res, next) => {
     },{
       path: 'professor',
     },{
-      path: 'classroom',
+      path: 'room',
     },{
       path: 'division',
     }]
@@ -71,7 +71,7 @@ const createSlot = TryCatch(async (req, res, next) => {
     },{
       path: 'professor',
     },{
-      path: 'classroom',
+      path: 'room',
     },{
       path: 'division',
     }]
@@ -99,7 +99,7 @@ const getSlotById = TryCatch(async (req, res, next) => {
       },{
         path: 'professor',
       },{
-        path: 'classroom',
+        path: 'room',
       },{
         path: 'division',
       }]
@@ -154,7 +154,7 @@ const updateSlot = TryCatch(async (req, res, next) => {
       },{
         path: 'professor',
       },{
-        path: 'classroom',
+        path: 'room',
       },{
         path: 'division',
       }]

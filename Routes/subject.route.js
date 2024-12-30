@@ -6,8 +6,8 @@ const {
     updateSubject, deleteSubject
 } = require('../Controllers/subject.controller.js');
 
-router.route('/subjects').get(isAuthenticated, getAllSubject);
-router.route('/subject').post(isAuthenticated, createSubject);
+router.route('/subject').get(isAuthenticated, getAllSubject);
+router.route('/create-subject').post(isAuthenticated, createSubject);
 router.route('/subject/:id').get(isAuthenticated, getSubjectById)
 .patch(isAuthenticated, updateSubject)
 .delete(isAuthenticated, deleteSubject);

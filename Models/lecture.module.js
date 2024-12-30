@@ -13,10 +13,10 @@ const schema = new Schema(
         ref: "Subject",
         required: [true, "Subject is required"],
     },
-    classroom: {
+    room: {
         type: Schema.Types.ObjectId,
-        ref: "Classroom",
-        required: [true, "Classroom is required"],
+        ref: "Room",
+        required: [true, "Room is required"],
     },
     professor: { 
         type: Schema.Types.ObjectId, 

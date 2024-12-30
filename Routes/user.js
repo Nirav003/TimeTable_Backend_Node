@@ -3,6 +3,7 @@ const {
   login,
   logout,
   newUser,
+  profile,
 } = require("../Controllers/user.js");
 const { isAuthenticated } = require("../MiddleWares/auth.js");
 
@@ -15,7 +16,7 @@ app.post("/login", login);
 
 app.use(isAuthenticated);
 
-
+app.get("/profile", profile);
 app.get("/logout", logout);
 
 

@@ -35,6 +35,10 @@ const createProfessor = TryCatch(async (req, res, next) => {
 
     if(existingProfessor) return next(new ErrorHandler('Professor already exists', 400));
 
+    const stream = await Stream.findById(streamId);
+
+    if(!stream) return next(new ErrorHandler('Stream not found', 404));
+
     const newProfessor = new Professor({name, designation, emailId, phoneNumber, stream: streamId});
     await newProfessor.save();
 

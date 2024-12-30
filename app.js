@@ -5,14 +5,13 @@ const cookieParser = require('cookie-parser');
 const test = require('./Routes/test.route');
 const { connectDB, corsOptions } = require('./Config/config');
 const { TryCatch } = require('./Utils/utility');
-const bodyParser = require('body-parser');
 
 const { errorMiddleware } = require('./MiddleWares/error.js');
 
 //import router of slot
 const userRoute = require("./Routes/user");
 const lectureRoute = require("./Routes/lecture");
-const classroomRoute = require("./Routes/classroom.js");
+const roomRoute = require("./Routes/room.route.js");
 const yearRoute = require("./Routes/year.route");
 const streamRoute = require("./Routes/stream.route.js");
 const professorRoute = require("./Routes/professor.route");
@@ -20,7 +19,6 @@ const subjectRoute = require("./Routes/subject.route.js");
 const divisionRoute = require("./Routes/division.route");
 const calendarRoute = require("./Routes/calendar.route.js");
 const shiftRoute = require("./Routes/shift.route.js");
-//import router of slot
 const timeSlotRoute = require('./Routes/timeSlot.route');
 
 
@@ -51,7 +49,7 @@ app.use('/api/v1/college', yearRoute); //middleware to use year router using RES
 app.use('/api/v1/college', streamRoute); //middleware to use stream router using REST APi
 app.use('/api/v1/college', professorRoute); //middleware to use professor router using REST APi
 app.use('/api/v1/college', subjectRoute); //middleware to use subject router using REST APi
-app.use('/api/v1/college', classroomRoute); //middleware to use classroom router using REST APi
+app.use('/api/v1/college', roomRoute); //middleware to use classroom router using REST APi
 app.use('/api/v1/college', divisionRoute); //middleware to use division router using REST APi
 app.use('/api/v1/college', calendarRoute);  //middleware to use calendar router using REST APi
 app.use('/api/v1/college', shiftRoute);    //middleware to use shift router using REST APi
@@ -63,8 +61,6 @@ const start = TryCatch(async () => {
     })
 })
 
-app.use(errorMiddleware);
-
 start();
 
-module.exports = { envMode };
+app.use(errorMiddleware);

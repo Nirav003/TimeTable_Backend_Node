@@ -13,7 +13,7 @@ const getAllStreams = TryCatch(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: "Streams found successfully",
-        Stream: streams
+        stream: streams
     });
 
 });
@@ -23,7 +23,7 @@ const getAllStreams = TryCatch(async (req, res, next) => {
 const createStream = TryCatch(async (req, res, next) => {
 
     const { name, specialisation, yearId } = req.body;
-
+    
     const year = await Year.findById(yearId);
 
     if(!year) return next(new ErrorHandler('Year not found',404));

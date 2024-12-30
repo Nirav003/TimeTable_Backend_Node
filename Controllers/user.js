@@ -52,8 +52,17 @@ const newUser = TryCatch(async (req, res, next) => {
       });
   });
 
+  const profile = TryCatch(async (req, res, next) => {
+    return res.status(200).json({
+      success: true,
+      user: req.user,
+      message: "User profile fetched successfully",
+    })
+  })
+
   module.exports = {
     newUser,
     login,
     logout,
+    profile
   };

@@ -21,6 +21,13 @@ const streamSchema = new Schema({
 }
 );
 
+streamSchema.index({ 
+    specialisation: 1,
+    year: 1
+},{
+    unique: true
+});
+
 const Stream = mongoose.models.Stream || model('Stream', streamSchema);
 
 module.exports = Stream;

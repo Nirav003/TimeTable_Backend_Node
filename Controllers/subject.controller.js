@@ -8,7 +8,7 @@ const getAllSubject = TryCatch(async (req, res) => {
   res.status(200).json({
     success: true,
     message: "Subjects fetched successfully",
-    subjects,
+    subject: subjects,
   });
 });
 
@@ -26,7 +26,11 @@ const getSubjectById = TryCatch(async (req, res) => {
       return res.status(404).json({ error: "Subject not found" });
     }
 
-    res.status(200).json(subject);
+    res.status(200).json({
+      success: true,
+      message: "Subject fetched successfully",
+      subject: subject,
+    });
     res
       .status(500)
       .json({ error: "An error occurred while fetching the subject" });
@@ -63,7 +67,11 @@ const updateSubject = TryCatch( async (req, res) => {
     return res.status(404).json({ error: "Subject not found" });
   }
 
-  res.status(200).json(updatedSubject);
+  res.status(200).json({
+    success: true,
+    message: "Subject updated successfully",
+    subject: updatedSubject,
+  });
 
 });
 
@@ -81,7 +89,10 @@ const deleteSubject = TryCatch( async (req, res) => {
       return res.status(404).json({ error: "Subject not found" });
     }
 
-    res.status(200).json({ message: "Subject deleted successfully" });
+    res.status(200).json({ 
+      success: true,
+      message: "Subject deleted successfully"
+    });
 }
 );
 
