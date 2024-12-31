@@ -6,8 +6,8 @@ const {
     updateShift, deleteShift
 } = require("../Controllers/shift.controller.js");
 
-router.route('/shift').get(isAuthenticated, getAllShifts)
-.post(isAuthenticated, createShift);
+router.route('/shift').get(isAuthenticated, getAllShifts);
+router.route('/create-shift').post(isAuthenticated, createShift);
 router.route('/shift/:id').get(isAuthenticated, getShiftById)
 .patch(isAuthenticated, updateShift)
 .delete(isAuthenticated, deleteShift);

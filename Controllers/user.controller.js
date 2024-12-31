@@ -1,5 +1,5 @@
 const {compare} = require('bcrypt')
-const { TryCatch } = require('../Utils/utility');
+const { TryCatch } = require('../Utils/utility.js');
 const {
     cookieOptions,
     sendToken

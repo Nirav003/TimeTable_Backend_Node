@@ -4,7 +4,7 @@ const {
   logout,
   newUser,
   profile,
-} = require("../Controllers/user.js");
+} = require("../Controllers/user.controller.js");
 const { isAuthenticated } = require("../MiddleWares/auth.js");
 
 const app = exp.Router();

@@ -2,25 +2,25 @@ const exp = require('express');
 const app = exp();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const test = require('./Routes/test.route');
+const test = require('./Routes/test.routes.js');
 const { connectDB, corsOptions } = require('./Config/config');
 const { TryCatch } = require('./Utils/utility');
 
 const { errorMiddleware } = require('./MiddleWares/error.js');
 
 //import router of slot
-const userRoute = require("./Routes/user");
-const lectureRoute = require("./Routes/lecture");
-const roomRoute = require("./Routes/room.route.js");
-const yearRoute = require("./Routes/year.route");
-const streamRoute = require("./Routes/stream.route.js");
-const professorRoute = require("./Routes/professor.route");
-const subjectRoute = require("./Routes/subject.route.js");
-const divisionRoute = require("./Routes/division.route");
-const calendarRoute = require("./Routes/calendar.route.js");
-const shiftRoute = require("./Routes/shift.route.js");
-const timeSlotRoute = require('./Routes/timeSlot.route');
-
+const userRoute = require("./Routes/user.routes.js");
+const lectureRoute = require("./Routes/lecture.routes.js");
+const roomRoute = require("./Routes/room.routes.js");
+const yearRoute = require("./Routes/year.routes.js");
+const streamRoute = require("./Routes/stream.routes.js");
+const professorRoute = require("./Routes/professor.routes.js");
+const subjectRoute = require("./Routes/subject.routes.js");
+const divisionRoute = require("./Routes/division.routes.js");
+const calendarRoute = require("./Routes/calendar.routes.js");
+const shiftRoute = require("./Routes/shift.routes.js");
+const timeSlotRoute = require('./Routes/timeSlot.routes.js');
+const streamSubjectMappingRoute = require('./Routes/streamSsubject.routes.js')
 
 require('dotenv').config({
     path: './.env',
@@ -30,7 +30,6 @@ require('dotenv').config({
 // const mongoURI = process.env.MONGO_URI;
 const port = process.env.PORT || 8000;
 const envMode = process.env.NODE_ENV ? process.env.NODE_ENV.trim() : "PRODUCTION";
-// connectDB(mongoURI);
 
 app.use(exp.json());
 app.use(cookieParser());
@@ -53,6 +52,7 @@ app.use('/api/v1/college', roomRoute); //middleware to use classroom router usin
 app.use('/api/v1/college', divisionRoute); //middleware to use division router using REST APi
 app.use('/api/v1/college', calendarRoute);  //middleware to use calendar router using REST APi
 app.use('/api/v1/college', shiftRoute);    //middleware to use shift router using REST APi
+app.use('/api/v1/college', streamSubjectMappingRoute);    //middleware to use streamSubjectMapping router using REST APi
 
 const start = TryCatch(async () => {
     await connectDB(process.env.MONGO_URI)
