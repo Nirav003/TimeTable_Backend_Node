@@ -2,24 +2,24 @@ const exp = require('express');
 const app = exp();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const test = require('./Routes/test.route');
+const test = require('./Routes/test.routes.js');
 const { connectDB, corsOptions } = require('./Config/config');
 const { TryCatch } = require('./Utils/utility');
 
 const { errorMiddleware } = require('./MiddleWares/error.js');
 
 //import router of slot
-const userRoute = require("./Routes/user");
-const lectureRoute = require("./Routes/lecture");
-const roomRoute = require("./Routes/room.route.js");
-const yearRoute = require("./Routes/year.route");
-const streamRoute = require("./Routes/stream.route.js");
-const professorRoute = require("./Routes/professor.route");
-const subjectRoute = require("./Routes/subject.route.js");
-const divisionRoute = require("./Routes/division.route");
-const calendarRoute = require("./Routes/calendar.route.js");
-const shiftRoute = require("./Routes/shift.route.js");
-const timeSlotRoute = require('./Routes/timeSlot.route');
+const userRoute = require("./Routes/user.routes.js");
+const lectureRoute = require("./Routes/lecture.routes.js");
+const roomRoute = require("./Routes/room.routes.js");
+const yearRoute = require("./Routes/year.routes.js");
+const streamRoute = require("./Routes/stream.routes.js");
+const professorRoute = require("./Routes/professor.routes.js");
+const subjectRoute = require("./Routes/subject.routes.js");
+const divisionRoute = require("./Routes/division.routes.js");
+const calendarRoute = require("./Routes/calendar.routes.js");
+const shiftRoute = require("./Routes/shift.routes.js");
+const timeSlotRoute = require('./Routes/timeSlot.routes.js');
 
 
 require('dotenv').config({

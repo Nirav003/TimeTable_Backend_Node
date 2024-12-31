@@ -31,13 +31,13 @@ const getAllSlot = TryCatch(async (req, res, next) => {
 
 //create slot
 const createSlot = TryCatch(async (req, res, next) => {
-  const { slotType, day, startTime, endTime, lecture } = req.body;
-
+  const { day, startTime, endTime, lecture } = req.body;
+  // removed slotType
   // Validate required fields
-  if (!slotType || !day || !startTime || !endTime || !lecture) {
+  if ( !day || !startTime || !endTime || !lecture) {
     return res.status(400).json({
       success: false,
-      message: "Please provide all required fields: slotType, startTime, endTime, and lecture."
+      message: "Please provide all required fields: day, startTime, endTime, and lecture."
     });
   }
 
@@ -53,7 +53,6 @@ const createSlot = TryCatch(async (req, res, next) => {
 
   // Create a new slot document
   const newSlot = new TimeSlot({
-    slotType,
     day,
     startTime,
     endTime,
@@ -138,14 +137,14 @@ const deleteSlot = TryCatch(async (req, res, next) => {
 const updateSlot = TryCatch(async (req, res, next) => {
 
     const slotId = req.params.id;
-    const { slotType, day, startTime, endTime, lecture } = req.body;
-
+    const { day, startTime, endTime, lecture } = req.body;
+    // removed slotType
     // Validate the ObjectId format
     if (!mongoose.Types.ObjectId.isValid(slotId)) return  next(new ErrorHandler("Invalid slot ID format", 400));
 
     const updatedSlot = await TimeSlot.findByIdAndUpdate(
       slotId,
-      { slotType, day, startTime, endTime, lecture }, //value to be updated
+      { day, startTime, endTime, lecture }, //value to be updated
       { new: true, runValidators: true } //new: make sure value remains updated, rV:updated value is being cross verified with model
     ).populate({
       path: 'lecture',

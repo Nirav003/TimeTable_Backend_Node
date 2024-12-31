@@ -7,11 +7,11 @@ const {
   getLectureById,
   deleteLecture,
   updateLecture
-} = require("../Controllers/lecture.js");
+} = require("../Controllers/lecture.controller.js");
 
 router.use(isAuthenticated);
 
-router.route('/all-lecture').get(getAllLectures);
+router.route('/lectures').get(getAllLectures);
 router.route('/create-lecture').post(createLecture);
 router.route('/lecture/:id').get(getLectureById)
 .delete(deleteLecture)
