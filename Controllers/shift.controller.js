@@ -13,7 +13,7 @@ const getAllShifts = TryCatch(async (req, res) => {
       populate: [
         {path: "subject"},
         {path: "professor"},
-        {path: "classroom"},
+        {path: "room"},
         {path: "division"}
       ] 
     }
@@ -24,7 +24,11 @@ const getAllShifts = TryCatch(async (req, res) => {
     return res.status(404).json({ message: "No shifts found" });
   }
 
-  res.status(200).json(shifts);
+  res.status(200).json({
+    success: true,
+    message: "Shifts found successfully",
+    shift: shifts
+  });
 });
 
 //get shift by id
@@ -45,7 +49,11 @@ const getShiftById = TryCatch(async (req, res) => {
   }
 
   // If shift is found, send it in the response
-  res.status(200).json(shift);
+  res.status(200).json({
+    success: true,
+    message: "Shift found successfully",
+    shift: shift,
+  });
 });
 
 
@@ -75,7 +83,11 @@ const createShift = TryCatch(async (req, res) => {
   // Save the shift to the database
   const savedShift = await newShift.save();
 
-  res.status(201).json(savedShift);
+  res.status(201).json({
+    success: true,
+    message: "Shift created successfully",
+    shift: savedShift,
+  });
 });
 
 const updateShift = TryCatch(async (req, res) => {
@@ -104,7 +116,11 @@ const updateShift = TryCatch(async (req, res) => {
   }
 
   // If shift is updated successfully, return the updated document
-  res.status(200).json(updatedShift);
+  res.status(200).json({
+    success: true,
+    message: "Shift updated successfully",
+    shift: updatedShift,
+  });
 });
 
 const deleteShift = TryCatch(async (req, res) => {
@@ -123,7 +139,10 @@ const deleteShift = TryCatch(async (req, res) => {
     return res.status(404).json({ message: "Shift not found" });
   }
 
-  res.status(200).json({ message: "Shift deleted successfully" });
+  res.status(200).json({ 
+    success: true,
+    message: "Shift deleted successfully"
+  });
 });
 
 

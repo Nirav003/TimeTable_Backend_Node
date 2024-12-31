@@ -6,17 +6,17 @@ const schema = new Schema(
     lectureType: {
         type: String,
         required: [true, "LectureType is required"],
-        enum: ["Theory", "Practical", "Guest Lecture"],
+        enum: ["Theory", "Practical", "Break", "Guest Lecture"],
     },
     subject: {
         type: Schema.Types.ObjectId,
         ref: "Subject",
         required: [true, "Subject is required"],
     },
-    classroom: {
+    room: {
         type: Schema.Types.ObjectId,
-        ref: "Classroom",
-        required: [true, "Classroom is required"],
+        ref: "Room",
+        required: [true, "Room is required"],
     },
     professor: { 
         type: Schema.Types.ObjectId, 
@@ -26,6 +26,7 @@ const schema = new Schema(
     division: {
         type: Schema.Types.ObjectId,
         ref: "Division",
+        default: null
     },
   },
   {

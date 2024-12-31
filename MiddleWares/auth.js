@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 const { ErrorHandler, TryCatch } = require("../Utils/utility.js");
 
 const isAuthenticated = TryCatch((req, res, next) => {
-    const token = req.cookies["time-table-app-token"];
+    const token = req.cookies["time-table-app-token"] || req.headers.authorization?.split(' ')[1];
     // console.log(token);
     if (!token)
       return next(new ErrorHandler("Please login to access this route", 401));

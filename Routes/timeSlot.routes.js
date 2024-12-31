@@ -9,7 +9,7 @@ const {
 router.use(isAuthenticated);
 
 router.route('/timeslot').get(getAllSlot)
-.post(createSlot);
+router.route('/create-timeslot').post(createSlot);
 router.route('/timeslot/:id').get(getSlotById)
 .delete(deleteSlot)
 .patch(updateSlot)

@@ -3,7 +3,8 @@ const {
   login,
   logout,
   newUser,
-} = require("../Controllers/user.js");
+  profile,
+} = require("../Controllers/user.controller.js");
 const { isAuthenticated } = require("../MiddleWares/auth.js");
 
 const app = exp.Router();
@@ -15,7 +16,7 @@ app.post("/login", login);
 
 app.use(isAuthenticated);
 
-
+app.get("/profile", profile);
 app.get("/logout", logout);
 
 

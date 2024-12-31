@@ -4,11 +4,11 @@ const { Schema, model, models } = mongoose;
 //Schema design
 const timeSlotSchema = new Schema(
   {
-    slotType: {
-      type: String,
-      required:[true, "Slot number is required"],
-      enum: ["Break", "Lecture", "Practical"]
-    },
+    // slotType: {
+    //   type: String,
+    //   required:[true, "Slot number is required"],
+    //   enum: ["Break", "Lecture", "Practical"]
+    // },
     day: {
       type: String,
       required: [true, "Day required"],
