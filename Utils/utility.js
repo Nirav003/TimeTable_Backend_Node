@@ -24,8 +24,8 @@ const cookieOptions = {
 };
 
 const sendToken = (res, user, code, message) => {
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-
+  const token = jwt.sign({ _id: user._id, role: user.roll }, process.env.JWT_SECRET);
+  
   return res.status(code).cookie("time-table-app-token", token, cookieOptions).json({
     success: true,
     user,

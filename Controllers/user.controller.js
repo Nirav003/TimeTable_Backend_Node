@@ -53,8 +53,8 @@ const newUser = TryCatch(async (req, res, next) => {
   });
 
   const profile = TryCatch(async (req, res, next) => {
-
-    const user = await User.findById(req.user);
+    
+    const user = await User.findById(req.user.id);
 
     return res.status(200).json({
       success: true,

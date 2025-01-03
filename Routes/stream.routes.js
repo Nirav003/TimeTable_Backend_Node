@@ -8,13 +8,14 @@ const {
     updateStream,
     deleteStream
 } = require('../Controllers/stream.controller.js');
+const { verifyRole } = require('../MiddleWares/verifyRole.js');
 
 router.use(isAuthenticated);
 
-router.route('/stream').get(getAllStreams);
-router.route('/create-stream').post(createStream);
-router.route('/stream/:id').get(getStreamById)
-.delete(deleteStream)
-.patch(updateStream)
+router.route('/stream').get(verifyRole(['admin']), getAllStreams);
+router.route('/create-stream').post(verifyRole(['admin']), createStream);
+router.route('/stream/:id').get(verifyRole(['admin']), getStreamById)
+.delete(verifyRole(['admin']), deleteStream)
+.patch(verifyRole(['admin']), updateStream)
 
 module.exports = router;
