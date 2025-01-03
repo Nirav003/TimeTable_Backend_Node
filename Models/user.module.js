@@ -32,7 +32,7 @@ const schema = new Schema(
     },
     roll: {
       type: String,
-      enum: ["student", "staff", "management"],
+      enum: ["student", "admin", "staff", "management"],
       default:"student"
     }
   },

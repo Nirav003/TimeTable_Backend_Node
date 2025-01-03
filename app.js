@@ -20,7 +20,8 @@ const divisionRoute = require("./Routes/division.routes.js");
 const calendarRoute = require("./Routes/calendar.routes.js");
 const shiftRoute = require("./Routes/shift.routes.js");
 const timeSlotRoute = require('./Routes/timeSlot.routes.js');
-const streamSubjectMappingRoute = require('./Routes/streamSsubject.routes.js')
+const streamSubjectMappingRoute = require('./Routes/streamSubject.routes.js');
+const ProfessorStreamMapping = require('./Routes/professorStream.routes.js');
 
 require('dotenv').config({
     path: './.env',
@@ -53,6 +54,7 @@ app.use('/api/v1/college', divisionRoute); //middleware to use division router u
 app.use('/api/v1/college', calendarRoute);  //middleware to use calendar router using REST APi
 app.use('/api/v1/college', shiftRoute);    //middleware to use shift router using REST APi
 app.use('/api/v1/college', streamSubjectMappingRoute);    //middleware to use streamSubjectMapping router using REST APi
+app.use('/api/v1/college', ProfessorStreamMapping);    //middleware to use professorStreamMapping router using REST APi
 
 const start = TryCatch(async () => {
     await connectDB(process.env.MONGO_URI)

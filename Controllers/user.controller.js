@@ -11,7 +11,7 @@ const {User} = require("../Models/user.module.js");
 const newUser = TryCatch(async (req, res, next) => {
     const { name, phone, email, batch, year, password } = req.body;
   
-    console.log(req);
+    // console.log(req);
     
 
     const user = await User.create({
@@ -53,9 +53,12 @@ const newUser = TryCatch(async (req, res, next) => {
   });
 
   const profile = TryCatch(async (req, res, next) => {
+
+    const user = await User.findById(req.user);
+
     return res.status(200).json({
       success: true,
-      user: req.user,
+      user: user,
       message: "User profile fetched successfully",
     })
   })

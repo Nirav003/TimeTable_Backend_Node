@@ -11,9 +11,9 @@ const {
 
 router.use(isAuthenticated);
 
-router.route('/mapping').get(getAllMappings);
-router.route('/create-mapping').post(createMapping);
-router.route('/mapping/:id').get(getMappingByStreamId)
+router.route('/mapping/stream-subject').get(getAllMappings);
+router.route('/create-mapping/stream-subject').post(createMapping);
+router.route('/mapping/stream-subject/:id').get(getMappingByStreamId)
 .delete(deleteMappingByStreamId)
 .patch(updateMappingByStreamId);
 
