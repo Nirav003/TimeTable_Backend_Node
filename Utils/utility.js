@@ -17,14 +17,14 @@ const TryCatch = (passedFunc) => async (req, res, next) => {
 };
 
 const cookieOptions = {
-  maxAge: 7 * 24 * 60 * 60 * 1000,
+  maxAge: 24 * 60 * 60 * 1000,
   sameSite: "none",
   httpOnly: true,
   secure: true,
 };
 
 const sendToken = (res, user, code, message) => {
-  const token = jwt.sign({ _id: user._id, role: user.roll }, process.env.JWT_SECRET);
+  const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.expiresIn });
   
   return res.status(code).cookie("time-table-app-token", token, cookieOptions).json({
     success: true,

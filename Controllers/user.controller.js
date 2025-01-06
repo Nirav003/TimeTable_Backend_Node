@@ -9,9 +9,9 @@ const {User} = require("../Models/user.module.js");
 
 // Create a new user and save it to the database and save token in cookie
 const newUser = TryCatch(async (req, res, next) => {
-    const { name, phone, email, batch, year, password } = req.body;
+    const { name, phone, email, batch, year, password, role } = req.body;
   
-    // console.log(req);
+    console.log(req.body);
     
 
     const user = await User.create({
@@ -21,6 +21,7 @@ const newUser = TryCatch(async (req, res, next) => {
       batch,
       year,
       password,
+      role: role || 'student'
     });
   
     sendToken(res, user, 201, "User created");
@@ -53,12 +54,10 @@ const newUser = TryCatch(async (req, res, next) => {
   });
 
   const profile = TryCatch(async (req, res, next) => {
-    
-    const user = await User.findById(req.user.id);
 
     return res.status(200).json({
       success: true,
-      user: user,
+      user: req.user,
       message: "User profile fetched successfully",
     })
   })

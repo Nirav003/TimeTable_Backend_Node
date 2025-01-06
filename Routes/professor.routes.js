@@ -12,10 +12,10 @@ const { verifyRole } = require('../MiddleWares/verifyRole.js');
 
 router.use(isAuthenticated);
 
-router.route('/professor').get(verifyRole(['admin']), getAllProfessor);
-router.route('/create-professor').post(verifyRole(['admin']), createProfessor);
-router.route('/professor/:id').get(verifyRole(['admin']), getProfessorById)
-    .patch(verifyRole(['admin']), updateProfessor)
-    .delete(verifyRole(['admin']), deleteProfessor);
+router.route('/professor').get(verifyRole('admin'), getAllProfessor);
+router.route('/create-professor').post(verifyRole('admin'), createProfessor);
+router.route('/professor/:id').get(verifyRole('admin'), getProfessorById)
+    .patch(verifyRole('admin'), updateProfessor)
+    .delete(verifyRole('admin'), deleteProfessor);
 
 module.exports = router;

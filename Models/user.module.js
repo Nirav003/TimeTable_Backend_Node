@@ -30,7 +30,7 @@ const schema = new Schema(
       required: true,
       select: false,
     },
-    roll: {
+    role: {
       type: String,
       enum: ["student", "admin", "staff", "management"],
       default:"student"

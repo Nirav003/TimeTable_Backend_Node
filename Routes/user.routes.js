@@ -16,8 +16,8 @@ app.post("/login", login);
 
 app.use(isAuthenticated);
 
-app.post("/register", verifyRole(['admin']), newUser);
-app.get("/profile", profile);
+app.post("/register", verifyRole('admin'), newUser);
+app.get("/profile", verifyRole('admin', 'management', 'staff', 'student'), profile);
 app.get("/logout", logout);
 
 
