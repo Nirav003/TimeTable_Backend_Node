@@ -1,13 +1,15 @@
 const exp = require('express');
 const router = exp.Router();
-const { isAuthenticated } = require("../MiddleWares/auth.js");
+const { isAuthenticated } = require('../Middlewares/auth.js');
+const { verifyRole } = require('../Middlewares/verifyRole.js');
 const {
     createYearCalendar, deleteAllCalendarEntries,
     deleteCalendarEntriesInRange, deleteCalendarEntryByDate,
-    createDayOfCalendar, updateCalendarDay
+    createDayOfCalendar, updateCalendarDay,
+    getCalendar
 } = require('../Controllers/calendar.controller.js');
-const { verifyRole } = require('../MiddleWares/verifyRole.js');
 
+router.route('/calendar').get(isAuthenticated, verifyRole('admin'), getCalendar)
 router.route('/calendar').post(isAuthenticated, verifyRole('admin'), createYearCalendar)
 router.route('/calendar/day').post(isAuthenticated, verifyRole('admin'), createDayOfCalendar)
 router.route('/calendar').delete(isAuthenticated, verifyRole('admin'), deleteAllCalendarEntries)

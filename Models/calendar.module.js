@@ -25,9 +25,19 @@ const schema = new Schema(
       required: true,
       trim: true
     },
+    stream: {
+      type: Schema.Types.ObjectId,
+      ref: 'Stream',
+      required: true
+    },
     shifts:[{
       type: Schema.Types.ObjectId,
       ref: 'Shift',
+      default:[]
+    }],
+    meetings:[{
+      type: Schema.Types.ObjectId,
+      ref: 'Meeting',
       default:[]
     }],
     holiday:{
@@ -40,6 +50,12 @@ const schema = new Schema(
     timestamps: true,
   }
 );
+
+schema.index({
+  date: 1
+}, {
+  unique: true
+});
 
 const Calendar = mongoose.models.Calendar || model("Calendar", schema);
 

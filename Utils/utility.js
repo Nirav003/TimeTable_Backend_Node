@@ -1,3 +1,5 @@
+const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 const jwt = require("jsonwebtoken");
 
 class ErrorHandler extends Error {
@@ -34,10 +36,41 @@ const sendToken = (res, user, code, message) => {
   });
 };
 
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: { 
+    user: process.env.EMAIL,
+    pass: process.env.PASS 
+  }
+});
+
+const sendEmail = (to, subject, text) => {
+
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to,
+    subject,
+    text
+  };
+  transporter.sendMail(mailOptions);
+};
+
+
+const scheduleReminder = (meeting) => {
+  const date = new Date(meeting.dateTime);
+  cron.schedule(`0 ${date.getMinutes()} ${date.getHours()} ${date.getDate()} ${date.getMonth()+1} *`, () => {
+    meeting.participants.forEach(member => {
+      sendEmail(member.email, `Reminder: ${meeting.title}`, `Join at ${meeting.dateTime}`);
+    });
+  });
+};
+
 
 module.exports = {
   ErrorHandler,
   TryCatch,
   cookieOptions,
-  sendToken
+  sendToken,
+  sendEmail,
+  scheduleReminder,
 };

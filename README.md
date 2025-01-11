@@ -26,6 +26,22 @@ step4: add '.env' file and add mongoDB connection URI & secret key.
         NODE_ENV = DEVELOPMENT
         CLIENT_URL = "Your frontend server URL"
 
+# Test users credentials
+-> Role: student
+        - email: student@test.com
+        - password: student
+
+-> Role: staff
+        - email: xyz@gmail.com
+        - password: xyz
+
+-> Role: management
+        - email: john@test.com
+        - password: john
+
+-> Role: admin
+        - email: abc@gmail.com
+        - password: abc
 
 step5: setup is ready to launch just command 'npm start' to run the backend server
 

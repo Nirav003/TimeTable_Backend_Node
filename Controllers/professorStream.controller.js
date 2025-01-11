@@ -1,5 +1,4 @@
 const { ProfessorStreamMapping } = require("../Models/professorStream.module.js");
-const { populate } = require("../Models/year.module.js");
 const { TryCatch, ErrorHandler } = require("../Utils/utility");
 
 // Get all professor-stream mappings

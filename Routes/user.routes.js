@@ -4,6 +4,7 @@ const {
   logout,
   newUser,
   profile,
+  getAllUsers,
 } = require("../Controllers/user.controller.js");
 const { isAuthenticated } = require("../MiddleWares/auth.js");
 const { verifyRole } = require("../MiddleWares/verifyRole.js");
@@ -17,6 +18,7 @@ app.post("/login", login);
 app.use(isAuthenticated);
 
 app.post("/register", verifyRole('admin'), newUser);
+app.get("/users", verifyRole('admin'), getAllUsers);
 app.get("/profile", verifyRole('admin', 'management', 'staff', 'student'), profile);
 app.get("/logout", logout);
 

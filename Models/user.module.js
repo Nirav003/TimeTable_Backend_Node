@@ -8,10 +8,6 @@ const schema = new Schema(
       type: String,
       required: true,
     },
-    phone: {
-      type: Number,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
@@ -24,6 +20,18 @@ const schema = new Schema(
     year: {
         type: String,
         required: true,    
+    },
+    division: {
+        type: String,
+        enum: ["A", "B"],
+        default: null,
+    },
+    phone: {
+      type: Number,
+      required: true,
+    },
+    designation: {
+      type: String,
     },
     password: {
       type: String,

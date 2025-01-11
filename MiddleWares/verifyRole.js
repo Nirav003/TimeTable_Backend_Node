@@ -1,9 +1,9 @@
 const verifyRole = (...allowedrole) => {
     return (req, res, next) => {
-        console.log('----------');
-        console.log('Allowed Role : ', allowedrole, ' User role : ', req.user.role);
-        console.log('Allowing : ', allowedrole.includes(req.user.role));
-        console.log('----------');
+        // console.log('----------');
+        // console.log('Allowed Role : ', allowedrole, ' User role : ', req.user.role);
+        // console.log('Allowing : ', allowedrole.includes(req.user.role));
+        // console.log('----------');
         
 
         if (!allowedrole.includes(req.user.role)) {

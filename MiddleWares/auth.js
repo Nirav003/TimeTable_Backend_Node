@@ -10,7 +10,7 @@ const isAuthenticated = TryCatch(async (req, res, next) => {
     const decodedData = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = decodedData;
-    console.log('Decoded user : ',req.user);
+    // console.log('Decoded user : ',req.user);
       
     next();
   
