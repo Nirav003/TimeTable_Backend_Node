@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
-const { Calendar } = require("../Models/calendar.module");
+const { TimetableSchedule } = require("../Models/timetableSchedule.module");
 const Shift = require("../Models/shift.module");
 const Stream = require("../Models/stream.module")
-const { TryCatch } = require("../Utils/utility");
+const { TryCatch, ErrorHandler } = require("../Utils/utility");
 const moment = require("moment");
 const Year = require("../Models/year.module");
 
-//Create full year calendar objects
-const createYearCalendar = TryCatch(async (req, res) => {
+//Create full year timetableschedule objects
+const createYearTimetableSchedule = TryCatch(async (req, res) => {
   const { date } = req.body;
 
   if (!date) {
@@ -31,33 +31,38 @@ const createYearCalendar = TryCatch(async (req, res) => {
       date: currentDate.format("DD/MM/YYYY"),
       dayOfWeek: currentDate.format("dddd"),
       month: currentDate.format("MMMM"),
+      stream: "",
       shifts: [],
       holiday: "",
     });
     currentDate.add(1, "day");
   }
 
-  await Calendar.insertMany(dates);
+  await TimetableSchedule.insertMany(dates);
 
   res.status(201).json({ 
     success: true,
-    message: "Calendar entries created successfully" 
+    message: "timetableSchedule entries created successfully" 
   });
 });
 
-//create a day in calendar
-const createDayOfCalendar = TryCatch( async (req, res) => {
-  const { date, shifts = [], holiday = '' } = req.body;
+//create a day in timetableschedule
+const createDayOfTimetableSchedule = TryCatch( async (req, res) => {
+  const { date, shifts = [], stream, holiday = '' } = req.body;
 
   if (!date) {
     return res.status(400).json({ error: 'Please provide a date' });
   }
 
-    const parsedDate = moment(date, 'DD/MM/YYYY');
+  const parsedDate = moment(date, 'DD/MM/YYYY');
 
-    if (!parsedDate.isValid()) {
-      return res.status(400).json({ error: 'Invalid date format. Please use DD/MM/YYYY.' });
-    }
+  if (!parsedDate.isValid()) {
+    return res.status(400).json({ error: 'Invalid date format. Please use DD/MM/YYYY.' });
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(stream)) {
+    return res.status(400).json({ error: 'Invalid stream ID format' });
+  }
 
     // Set the time to noon to avoid timezone issues
     parsedDate.set({ hour: 12, minute: 0, second: 0, millisecond: 0 });
@@ -65,16 +70,17 @@ const createDayOfCalendar = TryCatch( async (req, res) => {
     const dayOfWeek = parsedDate.format('dddd');
     const formattedDate = parsedDate.toDate();
 
-    const newCalendarEntry = new Calendar({
+    const newTimetableScheduleEntry = new TimetableSchedule({
       jsDate: formattedDate,
       date: parsedDate.format('DD/MM/YYYY'),
       dayOfWeek,
       month: parsedDate.format('MMMM'),
+      stream,
       shifts,
       holiday
     });
 
-    const savedEntry = await newCalendarEntry.save();
+    const savedEntry = await newTimetableScheduleEntry.save();
     res.status(201).json({
       success: true,
       message: "Day created successfully",
@@ -84,21 +90,21 @@ const createDayOfCalendar = TryCatch( async (req, res) => {
 }
 );
 
-//Delete whole year calendar objects
-const deleteAllCalendarEntries = TryCatch(async (req, res) => {
-  const result = await Calendar.deleteMany({});
-  res.status(200).json({ message: "All calendar entries deleted", result });
+//Delete whole year timetableschedule objects
+const deleteAllTimetableScheduleEntries = TryCatch(async (req, res) => {
+  const result = await TimetableSchedule.deleteMany({});
+  res.status(200).json({ message: "All timetableschedule entries deleted", result });
 });
 
 //Delete a specific date object
-const deleteCalendarEntryByDate = TryCatch(async (req, res) => {
+const deleteTimetableScheduleEntryByDate = TryCatch(async (req, res) => {
   const { date } = req.body;
 
   if (!date) {
     return res.status(400).json({ error: "Please provide a date" });
   }
 
-  const result = await Calendar.deleteOne({
+  const result = await TimetableSchedule.deleteOne({
     date: date,
   });
 
@@ -115,7 +121,7 @@ const deleteCalendarEntryByDate = TryCatch(async (req, res) => {
 });
 
 //Delete calender objects within the range (startDate, endDate)
-const deleteCalendarEntriesInRange = TryCatch(async (req, res) => {
+const deleteTimetableScheduleEntriesInRange = TryCatch(async (req, res) => {
   const { startDate, endDate } = req.body;
 
   if (!startDate || !endDate) {
@@ -140,7 +146,7 @@ const deleteCalendarEntriesInRange = TryCatch(async (req, res) => {
   // Set end date to end of the day to include all entries on that day
   end = end.endOf('day');
 
-  const result = await Calendar.deleteMany({
+  const result = await TimetableSchedule.deleteMany({
     jsDate: { $gte: start.toDate(), $lte: end.toDate() },
   });
 
@@ -159,14 +165,18 @@ const deleteCalendarEntriesInRange = TryCatch(async (req, res) => {
 }
 );
 
-// Update a calendar entry
-const updateCalendarDay = TryCatch(async (req, res, next) => {
+// Update a timetableschedule entry
+const updateTimetableScheduleDay = TryCatch(async (req, res, next) => {
   const { id } = req.params;
-  const { jsDate, date, dayOfWeek, month, shifts, holiday } = req.body;
+  const { jsDate, date, dayOfWeek, month, stream, shifts, holiday } = req.body;
 
   // Validate the ObjectId format
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    return next(new ErrorHandler("Invalid calendar ID format", 400));
+    return next(new ErrorHandler("Invalid timetableschedule ID format", 400));
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(stream)) {
+    return next(new ErrorHandler("Invalid stream ID format", 400));
   }
 
   // Validate that the shifts are valid ObjectId references
@@ -186,18 +196,23 @@ const updateCalendarDay = TryCatch(async (req, res, next) => {
       }
     }
   }
-  const updatedCalendar = await Calendar.findByIdAndUpdate(
+  
+  const updatedTimetableSchedule = await TimetableSchedule.findByIdAndUpdate(
     id,
     {
       jsDate,
       date,
       dayOfWeek,
       month,
+      stream,
       shifts, // Array of ObjectId references
       holiday
     },
-    { new: true, runValidators: true }
-  ).populate({
+    { new: true }
+  ).populate(
+    [
+      {path: "stream"},
+      {
     path: 'shifts',
     populate: { 
       path: "timeSlot",
@@ -211,21 +226,20 @@ const updateCalendarDay = TryCatch(async (req, res, next) => {
         ] 
       }
     }
-  });
+  }]);
 
-  if (!updatedCalendar) {
-    return next(new ErrorHandler("Calendar not found", 404));
+  if (!updatedTimetableSchedule) {
+    return next(new ErrorHandler("TimetableSchedule not found", 404));
   }
 
   res.status(200).json({
     success: true,
-    message: "Calendar updated successfully",
-    calendar: updatedCalendar
+    message: "TimetableSchedule updated successfully",
+    timetableschedule: updatedTimetableSchedule
   });
 });
 
-const getCalendar = TryCatch(async (req, res, next) => {
-
+const getTimetableSchedule = TryCatch(async (req, res, next) => {
   const { stream, year, date } = req.query;
 
   if (!stream || !year || !date) {
@@ -234,6 +248,7 @@ const getCalendar = TryCatch(async (req, res, next) => {
 
   // Split the stream (e.g., 'BSc IT') into name ('BSc') and specialisation ('IT')
   const [name, specialisation] = stream.split(' ');
+  console.log(name, '\n', specialisation);
 
   // Validate the date format (DD/MM/YYYY)
   const parsedDate = moment(date, 'DD/MM/YYYY');
@@ -246,39 +261,40 @@ const getCalendar = TryCatch(async (req, res, next) => {
 
   // Find the Stream document based on name, specialisation, and year
   const streamData = await Stream.findOne({
-    name: name,
-    specialisation: specialisation,
+    name: name.trim().toUpperCase(),
+    specialisation: specialisation.trim().toUpperCase(),
     year: yearData._id
-  });  
+  }).populate({
+    path: 'year',
+  });
 
   if (!streamData) {
     return res.status(404).json({ message: "No stream found for the provided details." });
   }
 
-  console.log(parsedDate.format('DD/MM/YYYY'));
-  
-
-  // Find the Calendar data for the given date and stream
-  const dayData = await Calendar.findOne({ date: parsedDate.format('DD/MM/YYYY') })
-    .populate({
-      path: 'shifts',
-      match: { stream: streamData._id },
-      populate: {
-        path: "timeSlot",
+  // Find the TimetableSchedule data for the given date and stream
+  const dayData = await TimetableSchedule.findOne({ date: parsedDate.format('DD/MM/YYYY'), stream: streamData._id })
+    .populate([
+      {
+        path: 'stream',
+        match: { _id: streamData._id }
+      },
+      {
+        path: 'shifts',
         populate: {
-          path: "lecture",
-          populate: [
-            { path: "subject" },
-            { path: "professor" },
-            { path: "room" },
-            { path: "division" }
-          ]
+          path: "timeSlot",
+          populate: {
+            path: "lecture",
+            populate: [
+              { path: "subject" },
+              { path: "professor" },
+              { path: "room" },
+              { path: "division" }
+            ]
+          }
         }
       }
-    });
-
-    console.log(dayData);
-    
+    ]);
 
   if (!dayData || dayData.shifts.length === 0) {
     return res.status(404).json({ message: "No timetable found for this stream and date." });
@@ -292,11 +308,11 @@ const getCalendar = TryCatch(async (req, res, next) => {
 });
 
 module.exports = {
-  createYearCalendar,
-  createDayOfCalendar,
-  deleteAllCalendarEntries,
-  deleteCalendarEntryByDate,
-  deleteCalendarEntriesInRange,
-  updateCalendarDay,
-  getCalendar
+  createYearTimetableSchedule,
+  createDayOfTimetableSchedule,
+  deleteAllTimetableScheduleEntries,
+  deleteTimetableScheduleEntryByDate,
+  deleteTimetableScheduleEntriesInRange,
+  updateTimetableScheduleDay,
+  getTimetableSchedule
 };

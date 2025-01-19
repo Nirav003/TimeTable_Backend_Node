@@ -11,10 +11,6 @@ const schema = new Schema(
         type: String,
         required: [true, "Description is required"]
     },
-    dateTime: { 
-        type: Date, 
-        required: [true, "Date & Time is required"] 
-    },
     type: { 
         type: String, 
         enum: ['Regular', 'Ad-hoc'], 
