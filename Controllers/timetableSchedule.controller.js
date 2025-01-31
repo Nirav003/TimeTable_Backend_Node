@@ -248,7 +248,7 @@ const getTimetableSchedule = TryCatch(async (req, res, next) => {
 
   // Split the stream (e.g., 'BSc IT') into name ('BSc') and specialisation ('IT')
   const [name, specialisation] = stream.split(' ');
-  console.log(name, '\n', specialisation);
+  // console.log(name, '\n', specialisation);
 
   // Validate the date format (DD/MM/YYYY)
   const parsedDate = moment(date, 'DD/MM/YYYY');
@@ -273,7 +273,7 @@ const getTimetableSchedule = TryCatch(async (req, res, next) => {
   }
 
   // Find the TimetableSchedule data for the given date and stream
-  const dayData = await TimetableSchedule.findOne({ date: parsedDate.format('DD/MM/YYYY'), stream: streamData._id })
+  const dayData = await TimetableSchedule.findOne({ date: parsedDate.format('DD/MM/YYYY') })
     .populate([
       {
         path: 'stream',
@@ -296,6 +296,9 @@ const getTimetableSchedule = TryCatch(async (req, res, next) => {
       }
     ]);
 
+    console.log(dayData);
+    
+
   if (!dayData || dayData.shifts.length === 0) {
     return res.status(404).json({ message: "No timetable found for this stream and date." });
   }
@@ -307,6 +310,99 @@ const getTimetableSchedule = TryCatch(async (req, res, next) => {
   });
 });
 
+const getWeeklyTimetable = TryCatch(async (req, res) => {
+    // Extract user info from session or request (assuming middleware sets req.user)
+    console.log(req.user);
+    
+    const { batch, year } = req.user.user; // Ensure `req.user` has this info from authentication
+
+    if (!batch || !year) {
+      return res.status(400).json({ message: 'Stream and Year are required' });
+    }
+
+    const { date } = req.query;
+    if (!date) {
+      return res.status(400).json({ message: 'Date is required' });
+    }
+
+    // Determine Monday–Sunday week range based on the given date
+    const startOfWeek = moment(date, 'DD/MM/YYYY').startOf('isoWeek'); // Monday
+    const endOfWeek = moment(date, 'DD/MM/YYYY').endOf('isoWeek'); // Sunday
+
+    const dateRange = [];
+    for (let i = 0; i < 7; i++) {
+      dateRange.push(moment(startOfWeek).add(i, 'days').format('DD/MM/YYYY'));
+    }
+
+    const yearData = await Year.findOne({ year });
+    console.log(yearData);
+
+    const [name, specialisation] = batch.split(' ');
+    const stream = await Stream.findOne({ name, specialisation, year: yearData._id }).populate('year');
+    console.log(name);
+    console.log(specialisation);
+    console.log(stream);
+        
+
+    // Fetch timetable only for the logged-in student's stream & year
+    const weekTimetable = await TimetableSchedule.find({
+      date: { $in: dateRange },
+      batch,
+      year
+    });
+
+    // Structure response grouped by day
+    const formattedData = dateRange.map((day) => {
+      const dayData = weekTimetable.find((entry) => entry.date === day);
+      return {
+        date: day,
+        dayOfWeek: moment(day, 'DD/MM/YYYY').format('dddd'), // Convert to 'Monday', 'Tuesday', etc.
+        isHoliday: dayData ? dayData.isHoliday : false, // Check if the day is a holiday
+        holiday: dayData?.holiday || '', // If it's a holiday, store the name
+        shifts: dayData && !dayData.isHoliday ? dayData.shifts : [] // Show shifts only if it's not a holiday
+      };
+    });
+
+    res.json({ 
+      success: true,
+      message: 'Weekly timetable retrieved successfully',
+      timetable: formattedData 
+    });
+});
+
+const getAllSchedule = TryCatch(async (req, res, next) => {
+  const allSchedule = await TimetableSchedule.find().populate([
+    {
+      path: 'shifts',
+      populate: {
+        path: "timeSlot",
+        populate: {
+          path: "lecture",
+          populate: [
+            { path: "subject" },
+            { path: "professor" },
+            { path: "room" },
+            { path: "division" }
+          ]
+        }
+      }
+    }
+  ]).populate({
+    path: 'stream',
+    populate: { path: 'year' }
+  });
+
+  if (allSchedule.length === 0) {
+    return next(new ErrorHandler("No timetable schedule found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "Timetable schedule retrieved successfully",
+    timetable: allSchedule
+  });
+})
+
 module.exports = {
   createYearTimetableSchedule,
   createDayOfTimetableSchedule,
@@ -314,5 +410,7 @@ module.exports = {
   deleteTimetableScheduleEntryByDate,
   deleteTimetableScheduleEntriesInRange,
   updateTimetableScheduleDay,
-  getTimetableSchedule
+  getTimetableSchedule,
+  getAllSchedule,
+  getWeeklyTimetable
 };

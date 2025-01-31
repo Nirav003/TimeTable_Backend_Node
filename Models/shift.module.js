@@ -7,11 +7,11 @@ const shiftSchema = new Schema(
       type: String,
       required: [true, "Shift number is required"]
     },
-    timeSlot: {
+    timeSlot: [{
       type: Schema.Types.ObjectId,
       ref: 'TimeSlot',
       required: [true, "TimeSlot is required"]
-    }
+    }]
   },
   {
     timestamps: true,

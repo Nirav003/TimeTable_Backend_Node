@@ -26,7 +26,7 @@ const cookieOptions = {
 };
 
 const sendToken = (res, user, code, message) => {
-  const token = jwt.sign({ _id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: process.env.expiresIn });
+  const token = jwt.sign({ _id: user._id, role: user.role, user: user }, process.env.JWT_SECRET, { expiresIn: process.env.expiresIn });
   
   return res.status(code).cookie("time-table-app-token", token, cookieOptions).json({
     success: true,
@@ -55,22 +55,10 @@ const sendEmail = (to, subject, text) => {
   transporter.sendMail(mailOptions);
 };
 
-
-const scheduleReminder = (meeting) => {
-  const date = new Date(meeting.dateTime);
-  cron.schedule(`0 ${date.getMinutes()} ${date.getHours()} ${date.getDate()} ${date.getMonth()+1} *`, () => {
-    meeting.participants.forEach(member => {
-      sendEmail(member.email, `Reminder: ${meeting.title}`, `Join at ${meeting.dateTime}`);
-    });
-  });
-};
-
-
 module.exports = {
   ErrorHandler,
   TryCatch,
   cookieOptions,
   sendToken,
   sendEmail,
-  scheduleReminder,
 };
