@@ -1,6 +1,6 @@
 const exp = require('express');
-const { isAuthenticated } = require('../Middlewares/auth.js');
-const { verifyRole } = require('../Middlewares/verifyRole.js');
+const { isAuthenticated } = require('../MiddleWares/auth.js');
+const { verifyRole } = require('../MiddleWares/verifyRole.js');
 const { addCommitteeMember, removeCommitteeMember } = require('../Controllers/committee-members.controller.js');
 
 const router = exp.Router();
