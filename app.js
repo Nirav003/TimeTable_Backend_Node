@@ -26,7 +26,7 @@ const ProfessorStreamMapping = require('./Routes/professorStream.routes.js');
 const committeRoute = require("./Routes/committee.routes.js");
 const membersRoute = require("./Routes/members.routes.js");
 const committeemembersRoute = require("./Routes/committee-member.routes.js");
-const maxLecturesPerDayRoutes = require('./routes/maxLecturePerDay.routes.js');
+const maxLecturesPerDayRoutes = require('./Routes/maxLecturePerDay.routes.js');
 
 require('dotenv').config({
     path: './.env',
