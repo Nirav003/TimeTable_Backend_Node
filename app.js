@@ -66,6 +66,13 @@ app.use('/api/v1/management', membersRoute)
 app.use('/api/v1/management', committeemembersRoute)
 app.use('/api/v1/max-lec', maxLecturesPerDayRoutes);
 
+app.all('*', (req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: `Can't find ${req.originalUrl} on this server!`
+    });
+});
+
 const start = TryCatch(async () => {
     await connectDB(process.env.MONGO_URI)
     app.listen(port,()=>{

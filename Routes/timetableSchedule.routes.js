@@ -16,7 +16,7 @@ const {
 
 router.route('/calendar').get(isAuthenticated, verifyRole('admin', 'student'), getTimetableSchedule)
 router.route('/schedule').get(isAuthenticated, verifyRole('admin'), getAllSchedule)
-router.route('/schedule/week').get(isAuthenticated, verifyRole('admin'), getWeeklyTimetable)
+router.route('/schedule/week').get(isAuthenticated, verifyRole('admin', 'student'), getWeeklyTimetable)
 router.route('/calendar').post(isAuthenticated, verifyRole('admin'), createYearTimetableSchedule)
 router.route('/schedule/day').post(isAuthenticated, verifyRole('admin'), createDayOfTimetableSchedule)
 router.route('/calendar').delete(isAuthenticated, verifyRole('admin'), deleteAllTimetableScheduleEntries)

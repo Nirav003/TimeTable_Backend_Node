@@ -31,7 +31,7 @@ const createYearTimetableSchedule = TryCatch(async (req, res) => {
       date: currentDate.format("DD/MM/YYYY"),
       dayOfWeek: currentDate.format("dddd"),
       month: currentDate.format("MMMM"),
-      stream: "",
+      stream: null, 
       shifts: [],
       holiday: "",
     });
@@ -310,64 +310,76 @@ const getTimetableSchedule = TryCatch(async (req, res, next) => {
   });
 });
 
-const getWeeklyTimetable = TryCatch(async (req, res) => {
-    // Extract user info from session or request (assuming middleware sets req.user)
-    console.log(req.user);
-    
-    const { batch, year } = req.user.user; // Ensure `req.user` has this info from authentication
+const getWeeklyTimetable = TryCatch(async (req, res, next) => {
+  
+  const { date } = req.query;
+  const { batch, year } = req.user.user; 
 
-    if (!batch || !year) {
-      return res.status(400).json({ message: 'Stream and Year are required' });
-    }
-
-    const { date } = req.query;
-    if (!date) {
+  if (!date) {
       return res.status(400).json({ message: 'Date is required' });
-    }
+  }
 
-    // Determine Monday–Sunday week range based on the given date
-    const startOfWeek = moment(date, 'DD/MM/YYYY').startOf('isoWeek'); // Monday
-    const endOfWeek = moment(date, 'DD/MM/YYYY').endOf('isoWeek'); // Sunday
+  if (!batch || !year) {
+      return res.status(400).json({ message: 'Stream and Year are required' });
+  }
 
-    const dateRange = [];
-    for (let i = 0; i < 7; i++) {
-      dateRange.push(moment(startOfWeek).add(i, 'days').format('DD/MM/YYYY'));
-    }
+  // Convert the given date to moment format and find the start (Monday) and end (Sunday) of that week
+  const givenDate = moment(date, 'DD/MM/YYYY');
+  const startOfWeek = givenDate.clone().startOf('isoWeek').format('DD/MM/YYYY'); // Monday
+  const endOfWeek = givenDate.clone().endOf('isoWeek').format('DD/MM/YYYY'); // Sunday
 
-    const yearData = await Year.findOne({ year });
-    console.log(yearData);
+  const yearData = await Year.findOne({ year });
 
-    const [name, specialisation] = batch.split(' ');
-    const stream = await Stream.findOne({ name, specialisation, year: yearData._id }).populate('year');
-    console.log(name);
-    console.log(specialisation);
-    console.log(stream);
-        
+  // Extract stream name and specialization from batch
+  const [name, specialisation] = batch.split(' ');
+  const st_name = name.trim().toUpperCase();
+  const st_sp = specialisation.trim().toUpperCase();
+  
+  const stream = await Stream.findOne({ 
+      name: st_name, 
+      specialisation: st_sp, 
+      year: yearData._id 
+  }).populate('year');
 
-    // Fetch timetable only for the logged-in student's stream & year
-    const weekTimetable = await TimetableSchedule.find({
-      date: { $in: dateRange },
-      batch,
-      year
-    });
+  if (!stream) {
+      return res.status(404).json({ message: 'Stream not found' });
+  }
 
-    // Structure response grouped by day
-    const formattedData = dateRange.map((day) => {
-      const dayData = weekTimetable.find((entry) => entry.date === day);
-      return {
-        date: day,
-        dayOfWeek: moment(day, 'DD/MM/YYYY').format('dddd'), // Convert to 'Monday', 'Tuesday', etc.
-        isHoliday: dayData ? dayData.isHoliday : false, // Check if the day is a holiday
-        holiday: dayData?.holiday || '', // If it's a holiday, store the name
-        shifts: dayData && !dayData.isHoliday ? dayData.shifts : [] // Show shifts only if it's not a holiday
-      };
-    });
+  // Query for all timetable entries within the week's date range
+  const timetable = await TimetableSchedule.find({
+      date: { $gte: startOfWeek, $lte: endOfWeek },
+      stream: stream._id
+  }).populate([
+      {
+        path: 'stream',
+        populate: { path: 'year' },
+      },
+      {
+        path: 'shifts',
+        populate: [{
+          path: "timeSlot",
+          populate: {
+            path: "lecture",
+            populate: [
+              { path: "subject" },
+              { path: "professor" },
+              { path: "room" },
+              { path: "division" }
+            ]
+          }
+        }]
+      }
+  ]);
 
-    res.json({ 
+  if (!timetable || timetable.length === 0) {
+      return res.status(404).json({ message: 'No timetable found for the selected week' });
+  }
+
+  res.json({ 
       success: true,
       message: 'Weekly timetable retrieved successfully',
-      timetable: formattedData 
-    });
+      timetable: timetable 
+  });
 });
 
 const getAllSchedule = TryCatch(async (req, res, next) => {
