@@ -7,6 +7,7 @@ const yearSchema = new Schema(
       type: String,
       required: [true, 'year is required'],
       unique: [true, 'year should be unique'],
+      enum: ['FY', 'SY', 'TY'],
       trim: true
     },
   },

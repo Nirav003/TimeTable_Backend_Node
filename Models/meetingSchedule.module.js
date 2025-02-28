@@ -25,24 +25,25 @@ const schema = new Schema(
       required: true,
       trim: true
     },
-    shifts:[{
+    meetings:[{
       type: Schema.Types.ObjectId,
-      ref: 'Shift',
+      ref: 'Meeting',
       default:[]
     }],
-    holiday:{
-      type: String,
-      trim: true,
-      default: ''
-    }
   },
   {
     timestamps: true,
   }
 );
 
-const Calendar = mongoose.models.Calendar || model("Calendar", schema);
+schema.index({
+  date: 1
+}, {
+  unique: true
+});
+
+const MeetingSchedule = models.MeetingSchedule || model("MeetingSchedule", schema);
 
 module.exports = {
-    Calendar
+    MeetingSchedule
 }

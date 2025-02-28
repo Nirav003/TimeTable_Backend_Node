@@ -5,11 +5,12 @@ const {
     getAllSubject, getSubjectById, createSubject,
     updateSubject, deleteSubject
 } = require('../Controllers/subject.controller.js');
+const { verifyRole } = require('../MiddleWares/verifyRole.js');
 
-router.route('/subject').get(isAuthenticated, getAllSubject);
-router.route('/create-subject').post(isAuthenticated, createSubject);
-router.route('/subject/:id').get(isAuthenticated, getSubjectById)
-.patch(isAuthenticated, updateSubject)
-.delete(isAuthenticated, deleteSubject);
+router.route('/subject').get(isAuthenticated, verifyRole('admin'), getAllSubject);
+router.route('/create-subject').post(isAuthenticated, verifyRole('admin'), createSubject);
+router.route('/subject/:id').get(isAuthenticated, verifyRole('admin'), getSubjectById)
+.patch(isAuthenticated, verifyRole('admin'), updateSubject)
+.delete(isAuthenticated, verifyRole('admin'), deleteSubject);
 
 module.exports = router;

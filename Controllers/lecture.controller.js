@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { Lecture } = require('../Models/lecture.module.js');
+const MaxLecturesPerDay = require('../Models/MaxLecturesPerDay.module.js');
 const { TryCatch, ErrorHandler } = require('../Utils/utility.js');
 
 // Create a new lecture
@@ -26,7 +27,24 @@ const createLecture = TryCatch(async (req, res, next) => {
 
     if(!lectureType || !subject || !room || !professor) return next(new ErrorHandler('Please provide all the necessary details',400));
 
-    const lecture = new Lecture(req.body);
+    // Check if the professor has reached the maximum number of lectures per day
+    const maxLecturesPerDay = await MaxLecturesPerDay.findOne({ professorId: professor });
+    if (maxLecturesPerDay) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const lecturesToday = await Lecture.countDocuments({
+            professor: professor,
+            createdAt: { $gte: today }
+        });
+        if (lecturesToday >= maxLecturesPerDay.maxLectures) {
+            return res.status(400).json({
+                success: false,
+                message: 'Professor has reached the maximum number of lectures for today'
+            });
+        }
+    }
+
+    const lecture = new Lecture({ lectureType, subject, room, professor, division });
     
     await lecture.save();
     res.status(200).json({
