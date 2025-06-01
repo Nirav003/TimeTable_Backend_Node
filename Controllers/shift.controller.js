@@ -1,21 +1,16 @@
 const mongoose = require("mongoose");
 const Shift = require("../Models/shift.module");
-const TimeSlot = require("../Models/timeSlot.module")
+const Stream = require("../Models/stream.module")
 const { TryCatch } = require("../Utils/utility");
+const moment = require("moment");
 
 //get all shifts
 const getAllShifts = TryCatch(async (req, res) => {
   // Fetch all shift documents from the database
   const shifts = await Shift.find().populate({ 
-    path: "timeSlot",
+    path: "stream",
     populate: {
-      path: "lecture",
-      populate: [
-        {path: "subject"},
-        {path: "professor"},
-        {path: "room"},
-        {path: "division"}
-      ] 
+      path: "year" 
     }
   });
 
@@ -41,7 +36,7 @@ const getShiftById = TryCatch(async (req, res) => {
   }
 
   // Fetch the shift document from the database by ID
-  const shift = await Shift.findById(id).populate("timeSlot");
+  const shift = await Shift.findById(id).populate("stream");
 
   // If no shift is found, send a 404 response
   if (!shift) {
@@ -59,40 +54,51 @@ const getShiftById = TryCatch(async (req, res) => {
 
 //create shifts
 const createShift = TryCatch(async (req, res) => {
-  const { shiftNo, timeSlot } = req.body;
+  const { shiftNo, day, date, startTime, endTime, stream } = req.body;
 
+  // console.log(req.body);
+  
   // Validate the input
-  if (!shiftNo || !timeSlot) {
+  if (!shiftNo || !day || !date || !startTime || !endTime || !stream) {
     return res
       .status(400)
-      .json({ error: "Please provide both shiftNo and timeSlot" });
+      .json({ error: "Please provide all neccessary information" });
   }
 
-  // Validate if the provided timeSlot exists
-  const existingTimeSlot = await TimeSlot.findById(timeSlot);
-  if (!existingTimeSlot) {
-    return res.status(400).json({ error: "Invalid timeSlot ID" });
+  // Validate if the provided stream exists
+  const existingStream = await Stream.findById(stream);
+  if (!existingStream) {
+    return res.status(400).json({ error: "Invalid Stream ID" });
   }
 
+  const FormatedDate = moment(date).format("DD/MM/YYYY");
+  
   // Create a new shift
   const newShift = new Shift({
     shiftNo,
-    timeSlot,
+    date: FormatedDate,
+    day,
+    startTime,
+    endTime,
+    stream
   });
 
   // Save the shift to the database
   const savedShift = await newShift.save();
 
+  // Populate the stream field after saving
+  const populatedShift = await Shift.findById(savedShift._id).populate("stream");
+
   res.status(201).json({
     success: true,
     message: "Shift created successfully",
-    shift: savedShift,
+    shift: populatedShift,
   });
 });
 
 const updateShift = TryCatch(async (req, res) => {
   const { id } = req.params;
-  const { shiftNo, timeSlot } = req.body;
+  const { shiftNo, day, date, startTime, endTime, stream } = req.body;
 
   // Validate the ID
   if (timeSlot && !mongoose.Types.ObjectId.isValid(id)) {
@@ -102,13 +108,17 @@ const updateShift = TryCatch(async (req, res) => {
   // Build the update object
   const updateData = {};
   if (shiftNo) updateData.shiftNo = shiftNo;
-  if (timeSlot) updateData.timeSlot = timeSlot;
+  if (day) updateData.day = day;
+  if (date) updateData.date = date;
+  if (startTime) updateData.startTime = startTime;
+  if (endTime) updateData.endTime = endTime;
+  if (stream) updateData.stream = stream;
 
   // Find the shift by ID and update it with the provided data
   const updatedShift = await Shift.findByIdAndUpdate(id, updateData, {
     new: true, // Return the updated document
     runValidators: true, // Ensure validations are run
-  }).populate("timeSlot");
+  }).populate("stream");
 
   // If no shift is found, send a 404 response
   if (!updatedShift) {
