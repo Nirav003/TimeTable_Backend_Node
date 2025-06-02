@@ -56,7 +56,7 @@ const getShiftById = TryCatch(async (req, res) => {
 const createShift = TryCatch(async (req, res) => {
   const { shiftNo, day, date, startTime, endTime, stream } = req.body;
 
-  // console.log(req.body);
+  // console.log(req.body);  
   
   // Validate the input
   if (!shiftNo || !day || !date || !startTime || !endTime || !stream) {
@@ -71,12 +71,10 @@ const createShift = TryCatch(async (req, res) => {
     return res.status(400).json({ error: "Invalid Stream ID" });
   }
 
-  const FormatedDate = moment(date).format("DD/MM/YYYY");
-  
   // Create a new shift
   const newShift = new Shift({
     shiftNo,
-    date: FormatedDate,
+    date,
     day,
     startTime,
     endTime,
@@ -101,7 +99,7 @@ const updateShift = TryCatch(async (req, res) => {
   const { shiftNo, day, date, startTime, endTime, stream } = req.body;
 
   // Validate the ID
-  if (timeSlot && !mongoose.Types.ObjectId.isValid(id)) {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "Invalid Shift ID" });
   }
 
