@@ -17,10 +17,16 @@ const streamRoute = require("./Routes/stream.routes.js");
 const professorRoute = require("./Routes/professor.routes.js");
 const subjectRoute = require("./Routes/subject.routes.js");
 const divisionRoute = require("./Routes/division.routes.js");
-const calendarRoute = require("./Routes/calendar.routes.js");
+const timetableScheduleRoute = require("./Routes/timetableSchedule.routes.js");
 const shiftRoute = require("./Routes/shift.routes.js");
 const timeSlotRoute = require('./Routes/timeSlot.routes.js');
-const streamSubjectMappingRoute = require('./Routes/streamSsubject.routes.js')
+const streamSubjectMappingRoute = require('./Routes/streamSubject.routes.js');
+const ProfessorStreamMapping = require('./Routes/professorStream.routes.js');
+
+const committeRoute = require("./Routes/committee.routes.js");
+const membersRoute = require("./Routes/members.routes.js");
+const committeemembersRoute = require("./Routes/committee-member.routes.js");
+const maxLecturesPerDayRoutes = require('./Routes/maxLecturePerDay.routes.js');
 
 require('dotenv').config({
     path: './.env',
@@ -50,9 +56,22 @@ app.use('/api/v1/college', professorRoute); //middleware to use professor router
 app.use('/api/v1/college', subjectRoute); //middleware to use subject router using REST APi
 app.use('/api/v1/college', roomRoute); //middleware to use classroom router using REST APi
 app.use('/api/v1/college', divisionRoute); //middleware to use division router using REST APi
-app.use('/api/v1/college', calendarRoute);  //middleware to use calendar router using REST APi
+app.use('/api/v1/college', timetableScheduleRoute);  //middleware to use timetableSchedule router using REST APi
 app.use('/api/v1/college', shiftRoute);    //middleware to use shift router using REST APi
 app.use('/api/v1/college', streamSubjectMappingRoute);    //middleware to use streamSubjectMapping router using REST APi
+app.use('/api/v1/college', ProfessorStreamMapping);    //middleware to use professorStreamMapping router using REST APi
+
+app.use('/api/v1/management', committeRoute)
+app.use('/api/v1/management', membersRoute)
+app.use('/api/v1/management', committeemembersRoute)
+app.use('/api/v1/max-lec', maxLecturesPerDayRoutes);
+
+app.all('*', (req, res, next) => {
+    res.status(404).json({
+        success: false,
+        message: `Can't find ${req.originalUrl} on this server!`
+    });
+});
 
 const start = TryCatch(async () => {
     await connectDB(process.env.MONGO_URI)

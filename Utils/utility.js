@@ -1,3 +1,5 @@
+const nodemailer = require('nodemailer');
+const cron = require('node-cron');
 const jwt = require("jsonwebtoken");
 
 class ErrorHandler extends Error {
@@ -17,15 +19,15 @@ const TryCatch = (passedFunc) => async (req, res, next) => {
 };
 
 const cookieOptions = {
-  maxAge: 7 * 24 * 60 * 60 * 1000,
+  maxAge: 24 * 60 * 60 * 1000,
   sameSite: "none",
   httpOnly: true,
   secure: true,
 };
 
 const sendToken = (res, user, code, message) => {
-  const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET);
-
+  const token = jwt.sign({ _id: user._id, role: user.role, user: user }, process.env.JWT_SECRET, { expiresIn: process.env.expiresIn });
+  
   return res.status(code).cookie("time-table-app-token", token, cookieOptions).json({
     success: true,
     user,
@@ -34,10 +36,29 @@ const sendToken = (res, user, code, message) => {
   });
 };
 
+const transporter = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: { 
+    user: process.env.EMAIL,
+    pass: process.env.PASS 
+  }
+});
+
+const sendEmail = (to, subject, text) => {
+
+  const mailOptions = {
+    from: process.env.EMAIL,
+    to,
+    subject,
+    text
+  };
+  transporter.sendMail(mailOptions);
+};
 
 module.exports = {
   ErrorHandler,
   TryCatch,
   cookieOptions,
-  sendToken
+  sendToken,
+  sendEmail,
 };

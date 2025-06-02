@@ -9,7 +9,7 @@ const createRoom = TryCatch( async (req, res, next) => {
 
     const room = new Room({ roomType, floor, room_no, dimensions});
     await room.save();
-    console.log(room);
+    // console.log(room);
     res.status(200).json({
         success: true,
         message: "Room created successfully",

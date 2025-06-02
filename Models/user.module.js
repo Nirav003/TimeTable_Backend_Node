@@ -8,10 +8,6 @@ const schema = new Schema(
       type: String,
       required: true,
     },
-    phone: {
-      type: Number,
-      required: true,
-    },
     email: {
       type: String,
       required: true,
@@ -25,14 +21,26 @@ const schema = new Schema(
         type: String,
         required: true,    
     },
+    division: {
+        type: String,
+        enum: ["A", "B"],
+        default: null,
+    },
+    phone: {
+      type: Number,
+      required: true,
+    },
+    designation: {
+      type: String,
+    },
     password: {
       type: String,
       required: true,
       select: false,
     },
-    roll: {
+    role: {
       type: String,
-      enum: ["student", "staff", "management"],
+      enum: ["student", "admin", "staff", "management"],
       default:"student"
     }
   },

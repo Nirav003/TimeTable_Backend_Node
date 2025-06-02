@@ -59,7 +59,7 @@ const getMappingByStreamId = TryCatch(async (req, res, next) => {
     res.status(200).json({
         success: true,
         message: 'Mapping found successfully',
-        mapping,
+        mapping: mapping,
     });
 });
 
@@ -91,7 +91,7 @@ const updateMappingByStreamId = TryCatch(async (req, res, next) => {
 
 // Delete a stream-subject mapping by stream ID
 const deleteMappingByStreamId = TryCatch(async (req, res, next) => {
-    const { streamId } = req.params;
+    const streamId = req.params.id;
 
     const deletedMapping = await StreamSubjectMapping.findOneAndDelete({ stream: streamId });
 
