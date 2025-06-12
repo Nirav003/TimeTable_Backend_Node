@@ -28,6 +28,16 @@ const schema = new Schema(
         ref: "Division",
         default: null
     },
+    stream: {
+        type: Schema.Types.ObjectId,
+        ref: "Stream",
+        required: [true, "Stream is required"],
+    },
+    timeSlot: {
+        type: Schema.Types.ObjectId,
+        ref: "TimeSlot",
+        required: [true, "TimeSlot is required"],
+    },
   },
   {
     timestamps: true,

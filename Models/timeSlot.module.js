@@ -8,7 +8,15 @@ const timeSlotSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Shift',
       required: [true, "lecture object required"]
-    }
+    },
+    startTime: {
+      type: String,
+      required: [true, "start time is required"],
+    },
+    endTime: {
+      type: String,
+      required: [true, "end time is required"],
+    },
   },
   {
     timestamps: true,

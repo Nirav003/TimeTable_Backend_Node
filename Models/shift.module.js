@@ -29,11 +29,6 @@ const shiftSchema = new Schema(
       ref: 'Stream',
       required: [true, "Stream is required"]
     },
-    // timeSlot: [{
-    //   type: Schema.Types.ObjectId,
-    //   ref: 'TimeSlot',
-    //   required: [true, "TimeSlot is required"]
-    // }]
   },
   {
     timestamps: true,

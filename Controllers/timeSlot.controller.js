@@ -20,12 +20,12 @@ const getAllSlot = TryCatch(async (req, res, next) => {
 
 //create slot
 const createSlot = TryCatch(async (req, res, next) => {
-  const { Shift: shiftId } = req.body;
+  const { shiftId, startTime, endTime } = req.body;
 
-  if (!shiftId) {
+  if (!shiftId || !startTime || !endTime) {    
     return res.status(400).json({
       success: false,
-      message: "Please provide required field: Shift"
+      message: "Please provide required fields: Shift, startTime, endTime"
     });
   }
 
@@ -40,17 +40,17 @@ const createSlot = TryCatch(async (req, res, next) => {
 
   // Create a new slot document
   const newSlot = new TimeSlot({
-    Shift: shiftId
+    Shift: shiftId,
+    startTime,
+    endTime
   });
 
   // Save the new slot to the database
   await newSlot.save();
 
   // Populate the Shift field in the response
-  const populatedSlot = await newSlot.populate({
-    path: 'Shift'
-  });
-
+  const populatedSlot = await newSlot.populate('Shift');
+  
   res.status(201).json({
     success: true,
     message: "Slot created successfully",
@@ -97,7 +97,7 @@ const deleteSlot = TryCatch(async (req, res, next) => {
 //Modify slot
 const updateSlot = TryCatch(async (req, res, next) => {
   const slotId = req.params.id;
-  const { Shift: shiftId } = req.body;
+  const { Shift: shiftId, startTime, endTime } = req.body;
 
   // Validate the ObjectId format
   if (!mongoose.Types.ObjectId.isValid(slotId)) return next(new ErrorHandler("Invalid slot ID format", 400));
@@ -113,9 +113,15 @@ const updateSlot = TryCatch(async (req, res, next) => {
     }
   }
 
+  // Build update object dynamically
+  const updateObj = {};
+  if (shiftId) updateObj.Shift = shiftId;
+  if (startTime) updateObj.startTime = startTime;
+  if (endTime) updateObj.endTime = endTime;
+
   const updatedSlot = await TimeSlot.findByIdAndUpdate(
     slotId,
-    { Shift: shiftId },
+    updateObj,
     { new: true, runValidators: true }
   ).populate({
     path: 'Shift'
