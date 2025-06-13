@@ -7,7 +7,7 @@ const getAllYear = TryCatch(async (req, res) => {
   const years = await Year.find();
   res.status(200).json({
     success: true,
-    message: "Subjects fetched successfully",
+    message: "Years fetched successfully",
     years: years,
   });
 });
@@ -25,7 +25,11 @@ const getYearById = TryCatch(async (req, res) => {
     return res.status(404).json({ error: "Year not found" });
   }
 
-  res.status(200).json(year);
+  res.status(200).json({
+    success: true,
+    message: "Year fetched successfully",
+    year: year,
+  });
 });
 
 //Create a new year

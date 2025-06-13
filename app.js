@@ -3,7 +3,7 @@ const app = exp();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const test = require('./Routes/test.routes.js');
-const { connectDB, corsOptions } = require('./Config/config');
+const { connectDB, corsOptions } = require('./Config/config.js');
 const { TryCatch } = require('./Utils/utility');
 
 const { errorMiddleware } = require('./MiddleWares/error.js');
@@ -44,6 +44,8 @@ app.use(cors(corsOptions));
 //routes
 app.get('/', (req, res)=>{
     res.send('Node Server is working...');
+    console.log(process.env.CLIENT_URL);
+    
 })
 
 app.use('/api/v1/test', test);
