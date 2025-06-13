@@ -5,7 +5,7 @@ const corsOptions = {
         "http://localhost:5173",
         "http://localhost:5174",
         "http://localhost:3000",
-        "https://timetable-frontend.netlify.app",
+        "https://time-table-app.netlify.app",
         process.env.CLIENT_URL,
     ],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
