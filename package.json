@@ -1,11 +1,12 @@
 {
   "name": "timetable_backend_node",
   "version": "1.0.0",
-  "description": "This project is for managing and centralizing the work load of time table and meetings of VPM's RZ Shah College .\"",
+  "description": "This project is for managing and centralizing the workload of the timetable and meetings of VPM's RZ Shah College.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "build": "echo 'Skipping build step'",
+    "test": "echo 'Skipping test step'"
   },
   "author": "",
   "license": "ISC",
