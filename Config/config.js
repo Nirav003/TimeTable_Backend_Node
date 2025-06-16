@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 
+console.log("CORS CLIENT_URL:", process.env.CLIENT_URL);
+
 const corsOptions = {
     origin: [
         "http://localhost:5173",
