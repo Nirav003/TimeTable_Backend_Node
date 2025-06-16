@@ -13,3 +13,7 @@ jobs:
       - name: Trigger Render Deployment
         run: |
           curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          echo "Deployment triggered successfully."
+      - name: Notify Deployment Status
+        run: |
+          echo "Deployment has been triggered for branch Nirav#05-new_apis_added."
